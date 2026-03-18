@@ -35,4 +35,8 @@ Features:
             <icon>app.svg</icon>
         </navigation>
     </navigations>
+    <settings>
+        <admin>OCA\PTO\Settings\AdminSettings</admin>
+        <admin-section>OCA\PTO\Settings\AdminSection</admin-section>
+    </settings>
 </info>
