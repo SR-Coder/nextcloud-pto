@@ -6,7 +6,6 @@
                 <router-link to="/requests">My Requests</router-link>
                 <router-link to="/requests/new">New Request</router-link>
                 <router-link to="/approvals">Approvals</router-link>
-                <router-link to="/admin">Settings</router-link>
             </nav>
             <main class="pto-content">
                 <router-view />

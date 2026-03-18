@@ -32,6 +32,7 @@ class RequestController extends Controller {
 
     /**
      * @NoAdminRequired
+     * @NoCSRFRequired
      */
     public function index(?string $status = null): DataResponse {
         $userId = $this->getUserId();
@@ -42,6 +43,7 @@ class RequestController extends Controller {
 
     /**
      * @NoAdminRequired
+     * @NoCSRFRequired
      */
     public function show(int $id): DataResponse {
         try {
@@ -55,6 +57,7 @@ class RequestController extends Controller {
 
     /**
      * @NoAdminRequired
+     * @NoCSRFRequired
      */
     public function create(
         int $policyId,
@@ -84,6 +87,7 @@ class RequestController extends Controller {
 
     /**
      * @NoAdminRequired
+     * @NoCSRFRequired
      */
     public function approve(int $id, ?string $comments = null): DataResponse {
         try {
@@ -98,6 +102,7 @@ class RequestController extends Controller {
 
     /**
      * @NoAdminRequired
+     * @NoCSRFRequired
      */
     public function deny(int $id, ?string $comments = null): DataResponse {
         try {
@@ -112,6 +117,7 @@ class RequestController extends Controller {
 
     /**
      * @NoAdminRequired
+     * @NoCSRFRequired
      */
     public function cancel(int $id): DataResponse {
         try {
@@ -126,6 +132,7 @@ class RequestController extends Controller {
 
     /**
      * @NoAdminRequired
+     * @NoCSRFRequired
      */
     public function pending(): DataResponse {
         $managerId = $this->getUserId();
@@ -136,6 +143,7 @@ class RequestController extends Controller {
 
     /**
      * @NoAdminRequired
+     * @NoCSRFRequired
      */
     public function approvals(int $id): DataResponse {
         $approvals = $this->service->getApprovals($id);

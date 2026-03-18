@@ -5,14 +5,14 @@ import Dashboard from './views/Dashboard.vue'
 import MyRequests from './views/MyRequests.vue'
 import NewRequest from './views/NewRequest.vue'
 import ApprovalQueue from './views/ApprovalQueue.vue'
-import AdminSettings from './views/AdminSettings.vue'
+
+console.log('[PTO] Script loaded')
 
 const routes = [
     { path: '/', component: Dashboard },
     { path: '/requests', component: MyRequests },
     { path: '/requests/new', component: NewRequest },
     { path: '/approvals', component: ApprovalQueue },
-    { path: '/admin', component: AdminSettings },
 ]
 
 const router = createRouter({
@@ -20,22 +20,32 @@ const router = createRouter({
     routes,
 })
 
+console.log('[PTO] Router created')
+
 function initApp() {
+    console.log('[PTO] initApp called, readyState:', document.readyState)
     const mountPoint = document.getElementById('app-content-vue')
+    console.log('[PTO] Mount point:', mountPoint)
+    
     if (!mountPoint) {
-        console.error('PTO app mount point not found')
+        console.error('[PTO] Mount point #app-content-vue not found!')
         return
     }
     
+    console.log('[PTO] Creating Vue app')
     const app = createApp(App)
     app.use(router)
+    console.log('[PTO] Mounting to #app-content-vue')
     app.mount('#app-content-vue')
+    console.log('[PTO] App mounted successfully!')
 }
 
-// Try multiple initialization strategies
+console.log('[PTO] Checking document.readyState:', document.readyState)
+
 if (document.readyState === 'loading') {
+    console.log('[PTO] DOM loading, adding event listener')
     document.addEventListener('DOMContentLoaded', initApp)
 } else {
-    // DOM already ready
+    console.log('[PTO] DOM already loaded, calling initApp immediately')
     initApp()
 }

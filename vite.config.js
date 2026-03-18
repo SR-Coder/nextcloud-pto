@@ -10,12 +10,18 @@ export default defineConfig({
     build: {
         outDir: 'js',
         emptyOutDir: false,
+        minify: false, // Disable minification to debug
         rollupOptions: {
             input: resolve(__dirname, 'src/main.js'),
             output: {
-                format: 'iife',
+                format: 'iife', // THIS is the key line!
                 entryFileNames: 'pto-main.js',
-                assetFileNames: 'pto-main.[ext]',
+                assetFileNames: (assetInfo) => {
+                    if (assetInfo.name && assetInfo.name.endsWith('.css')) {
+                        return 'pto-main.css'
+                    }
+                    return 'pto-main.[ext]'
+                },
             },
         },
     },
