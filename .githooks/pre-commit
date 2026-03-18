@@ -1,0 +1,28 @@
+#!/bin/sh
+# Pre-commit hook to prevent secrets from being committed
+
+echo "🔍 Checking for secrets..."
+
+# Check for common secret patterns
+if git diff --cached --name-only | xargs grep -E -i "(api[_-]?key|password|secret|token|private[_-]?key|access[_-]?key)" 2>/dev/null; then
+    echo "❌ ERROR: Potential secret detected in staged files!"
+    echo "Please remove secrets before committing."
+    echo "Use environment variables or Nextcloud config instead."
+    exit 1
+fi
+
+# Check for common credential file patterns
+if git diff --cached --name-only | grep -E "(.env|.secret|credentials|auth_token)" 2>/dev/null; then
+    echo "⚠️  WARNING: You're committing a file that might contain secrets:"
+    git diff --cached --name-only | grep -E "(.env|.secret|credentials|auth_token)"
+    echo ""
+    read -p "Are you sure this file should be committed? (y/N) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "❌ Commit aborted."
+        exit 1
+    fi
+fi
+
+echo "✅ Pre-commit checks passed"
+exit 0

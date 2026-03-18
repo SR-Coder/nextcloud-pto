@@ -1,0 +1,32 @@
+{
+  "name": "nextcloud-pto",
+  "version": "0.1.0",
+  "description": "PTO and vacation tracking for Nextcloud",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "watch": "vite build --watch",
+    "serve": "vite preview"
+  },
+  "keywords": [
+    "nextcloud",
+    "pto",
+    "vacation",
+    "time-off"
+  ],
+  "author": "JCR Labs",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SR-Coder/nextcloud-pto.git"
+  },
+  "dependencies": {
+    "vue": "^3.4.0",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "vite": "^5.1.0"
+  }
+}

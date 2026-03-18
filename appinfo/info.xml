@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <id>pto</id>
+    <name>PTO Tracker</name>
+    <summary>Comprehensive PTO and vacation tracking for teams</summary>
+    <description><![CDATA[
+Track and manage paid time off (PTO) with flexible policies, approval workflows, and calendar integration.
+
+Features:
+- Flexible PTO policies (unlimited, accrual, fixed annual)
+- Request and approval workflow
+- Multiple leave types (vacation, sick, personal)
+- Calendar integration
+- Reporting and analytics
+- Manager delegation
+- Email notifications
+    ]]></description>
+    <version>0.1.0</version>
+    <licence>MIT</licence>
+    <author mail="jim@sparerecords.com" homepage="https://github.com/SR-Coder">JCR Labs</author>
+    <namespace>PTO</namespace>
+    <category>organization</category>
+    <bugs>https://github.com/SR-Coder/nextcloud-pto/issues</bugs>
+    <repository type="git">https://github.com/SR-Coder/nextcloud-pto.git</repository>
+    <screenshot>https://raw.githubusercontent.com/SR-Coder/nextcloud-pto/main/screenshots/dashboard.png</screenshot>
+    <dependencies>
+        <nextcloud min-version="25" max-version="27"/>
+        <php min-version="8.0"/>
+    </dependencies>
+    <navigations>
+        <navigation>
+            <name>PTO Tracker</name>
+            <route>pto.page.index</route>
+            <icon>app.svg</icon>
+        </navigation>
+    </navigations>
+</info>

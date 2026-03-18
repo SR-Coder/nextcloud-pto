@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+js/
+css/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# Test coverage
+coverage/
+
+# Nextcloud
+.user.ini
+
+# Test coverage
+coverage/
+.phpunit.result.cache
+# Internal research and planning (keep private)
+*-research.md
+grok-*.md
+claude-*.md
+internal-*.md
+planning-*.md
+notes-*.md
+agent-*.md
+workspace-*.md
+brainstorm-*.md
