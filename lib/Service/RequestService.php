@@ -18,17 +18,20 @@ class RequestService {
     private ApprovalMapper $approvalMapper;
     private UserRoleMapper $userRoleMapper;
     private BalanceService $balanceService;
+    private AuthorizationService $authService;
 
     public function __construct(
         RequestMapper $requestMapper,
         ApprovalMapper $approvalMapper,
         UserRoleMapper $userRoleMapper,
-        BalanceService $balanceService
+        BalanceService $balanceService,
+        AuthorizationService $authService
     ) {
         $this->requestMapper = $requestMapper;
         $this->approvalMapper = $approvalMapper;
         $this->userRoleMapper = $userRoleMapper;
         $this->balanceService = $balanceService;
+        $this->authService = $authService;
     }
 
     /**
@@ -46,10 +49,25 @@ class RequestService {
     }
 
     /**
+     * Get pending requests for users this manager manages
+     * Uses Nextcloud's native manager relationships
      * @return Request[]
      */
     public function findPendingForManager(string $managerId): array {
-        return $this->requestMapper->findByManager($managerId, 'pending');
+        // If admin, return all pending requests
+        if ($this->authService->isAdmin($managerId)) {
+            return $this->requestMapper->findPending();
+        }
+        
+        // Get all users this manager manages
+        $managedUserIds = $this->authService->getManagedUsers($managerId);
+        
+        if (empty($managedUserIds)) {
+            return [];
+        }
+        
+        // Get pending requests for those users
+        return $this->requestMapper->findByUsers($managedUserIds, 'pending');
     }
 
     /**
@@ -210,14 +228,16 @@ class RequestService {
 
     /**
      * Check if a user is a manager for another user
+     * Uses Nextcloud's native manager relationships
      */
     private function isManager(string $managerId, string $userId): bool {
-        try {
-            $userRole = $this->userRoleMapper->findByUser($userId);
-            return $userRole->getManagerId() === $managerId;
-        } catch (DoesNotExistException $e) {
-            return false;
+        // Admins can approve any request
+        if ($this->authService->isAdmin($managerId)) {
+            return true;
         }
+        
+        // Check if manager is in the user's manager list
+        return $this->authService->isManagerOf($managerId, $userId);
     }
 
     /**

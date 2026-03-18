@@ -95,4 +95,38 @@ class RequestMapper extends QBMapper {
 
         return $this->findEntities($qb);
     }
+
+    /**
+     * Find requests by multiple user IDs
+     * @param string[] $userIds Array of user IDs
+     * @param string|null $status Optional status filter
+     * @return Request[]
+     */
+    public function findByUsers(array $userIds, ?string $status = null): array {
+        if (empty($userIds)) {
+            return [];
+        }
+
+        $qb = $this->db->getQueryBuilder();
+
+        $qb->select('*')
+            ->from($this->getTableName())
+            ->where($qb->expr()->in('user_id', $qb->createNamedParameter($userIds, IQueryBuilder::PARAM_STR_ARRAY)));
+
+        if ($status !== null) {
+            $qb->andWhere($qb->expr()->eq('status', $qb->createNamedParameter($status)));
+        }
+
+        $qb->orderBy('created_at', 'DESC');
+
+        return $this->findEntities($qb);
+    }
+
+    /**
+     * Find all pending requests
+     * @return Request[]
+     */
+    public function findPending(): array {
+        return $this->findByStatus('pending');
+    }
 }

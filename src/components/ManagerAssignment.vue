@@ -1,43 +1,55 @@
 <template>
     <div class="manager-assignment">
-        <div v-if="loading" class="loading-message">Loading users...</div>
+        <div class="info-box">
+            <p><strong>✓ Using Nextcloud's Native Manager System</strong></p>
+            <p>Manager assignments are now handled by Nextcloud's built-in user management.</p>
+            <p>To assign managers:</p>
+            <ol>
+                <li>Go to <strong>Settings</strong> → <strong>Users</strong></li>
+                <li>Select a user</li>
+                <li>Assign their manager(s) in the user details</li>
+            </ol>
+            <p>The PTO app will automatically respect these assignments - managers can approve PTO requests from users they manage.</p>
+        </div>
         
-        <div v-else class="users-table">
-            <div class="table-header">
-                <div class="col-user">User</div>
-                <div class="col-manager">Manager</div>
-                <div class="col-actions">Actions</div>
-            </div>
+        <div class="manager-summary">
+            <h4>Current Manager Assignments</h4>
             
-            <div v-for="user in users" :key="user.id" class="user-row">
-                <div class="col-user">
-                    <strong>{{ user.displayName }}</strong>
-                    <span class="user-id">({{ user.id }})</span>
-                </div>
-                
-                <div class="col-manager">
-                    <input 
-                        type="checkbox" 
-                        :id="'manager-' + user.id"
-                        v-model="user.isManager"
-                        @change="toggleManager(user)"
-                    />
-                    <label :for="'manager-' + user.id">Can approve PTO requests</label>
-                </div>
-                
-                <div class="col-actions">
-                    <span v-if="user.isAdmin" class="badge admin">Admin</span>
-                    <span v-if="user.isManager" class="badge manager">Manager</span>
-                </div>
-            </div>
+            <div v-if="loading" class="loading-message">Loading...</div>
             
-            <div v-if="users.length === 0" class="placeholder-message">
+            <div v-else-if="users.length === 0" class="placeholder-message">
                 No users found.
+            </div>
+            
+            <div v-else class="users-table">
+                <div class="table-header">
+                    <div class="col-user">User</div>
+                    <div class="col-managers">Assigned Managers</div>
+                    <div class="col-can-approve">Can Approve?</div>
+                </div>
+                
+                <div v-for="user in users" :key="user.id" class="user-row">
+                    <div class="col-user">
+                        <strong>{{ user.displayName }}</strong>
+                        <span class="user-id">({{ user.id }})</span>
+                    </div>
+                    
+                    <div class="col-managers">
+                        <span v-if="user.managers && user.managers.length > 0">
+                            {{ user.managers.join(', ') }}
+                        </span>
+                        <span v-else class="no-managers">No managers assigned</span>
+                    </div>
+                    
+                    <div class="col-can-approve">
+                        <span v-if="user.canApprove" class="badge manager">✓ Manager</span>
+                        <span v-else class="no-action">—</span>
+                    </div>
+                </div>
             </div>
         </div>
         
         <div v-if="error" class="error-message">{{ error }}</div>
-        <div v-if="success" class="success-message">{{ success }}</div>
     </div>
 </template>
 
@@ -49,7 +61,6 @@ export default {
             users: [],
             loading: false,
             error: null,
-            success: null,
         }
     },
     mounted() {
@@ -61,8 +72,8 @@ export default {
             this.error = null
             
             try {
-                const response = await fetch('/index.php/apps/pto/api/v1/users')
-                if (!response.ok) throw new Error('Failed to load users')
+                const response = await fetch('/index.php/apps/pto/api/v1/users/managers')
+                if (!response.ok) throw new Error('Failed to load user manager data')
                 
                 const data = await response.json()
                 this.users = data.users || []
@@ -73,34 +84,6 @@ export default {
                 this.loading = false
             }
         },
-        
-        async toggleManager(user) {
-            this.error = null
-            this.success = null
-            
-            try {
-                const response = await fetch(`/index.php/apps/pto/api/v1/users/${user.id}/manager`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ isManager: user.isManager }),
-                })
-                
-                if (!response.ok) {
-                    const error = await response.json()
-                    throw new Error(error.error || 'Failed to update manager status')
-                }
-                
-                this.success = `${user.displayName} manager status updated`
-                setTimeout(() => { this.success = null }, 3000)
-            } catch (err) {
-                console.error('Toggle manager error:', err)
-                this.error = err.message
-                // Revert checkbox on error
-                user.isManager = !user.isManager
-            }
-        },
     },
 }
 </script>
@@ -108,6 +91,29 @@ export default {
 <style scoped>
 .manager-assignment {
     margin-top: 1rem;
+}
+
+.info-box {
+    background: var(--color-success-background, #e8f5e9);
+    border: 1px solid var(--color-success, #4caf50);
+    border-radius: var(--border-radius, 4px);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.info-box p {
+    margin: 0.5rem 0;
+    color: var(--color-main-text, #333);
+}
+
+.info-box ol {
+    margin: 0.5rem 0 0.5rem 1.5rem;
+    color: var(--color-main-text, #333);
+}
+
+.manager-summary h4 {
+    color: var(--color-main-text, #555);
+    margin-bottom: 1rem;
 }
 
 .loading-message,
@@ -125,7 +131,7 @@ export default {
 
 .table-header {
     display: grid;
-    grid-template-columns: 2fr 2fr 1fr;
+    grid-template-columns: 2fr 3fr 1fr;
     gap: 1rem;
     padding: 12px 16px;
     background: var(--color-background-dark, #f8f8f8);
@@ -135,7 +141,7 @@ export default {
 
 .user-row {
     display: grid;
-    grid-template-columns: 2fr 2fr 1fr;
+    grid-template-columns: 2fr 3fr 1fr;
     gap: 1rem;
     padding: 12px 16px;
     border-bottom: 1px solid var(--color-border, #e0e0e0);
@@ -160,22 +166,16 @@ export default {
     font-size: 0.875rem;
 }
 
-.col-manager {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+.col-managers {
+    color: var(--color-main-text, #333);
 }
 
-.col-manager input[type="checkbox"] {
-    cursor: pointer;
+.no-managers {
+    color: var(--color-text-lighter, #999);
+    font-style: italic;
 }
 
-.col-manager label {
-    cursor: pointer;
-    user-select: none;
-}
-
-.col-actions {
+.col-can-approve {
     display: flex;
     gap: 0.5rem;
     justify-content: flex-end;
@@ -188,14 +188,13 @@ export default {
     font-weight: 600;
 }
 
-.badge.admin {
-    background: var(--color-error, #d32f2f);
-    color: white;
-}
-
 .badge.manager {
     background: var(--color-primary-element, #0082c9);
     color: white;
+}
+
+.no-action {
+    color: var(--color-text-lighter, #999);
 }
 
 .error-message {
@@ -203,14 +202,6 @@ export default {
     margin-top: 1rem;
     padding: 12px;
     background: var(--color-error-background, #ffebee);
-    border-radius: var(--border-radius, 4px);
-}
-
-.success-message {
-    color: var(--color-success, #388e3c);
-    margin-top: 1rem;
-    padding: 12px;
-    background: var(--color-success-background, #e8f5e9);
     border-radius: var(--border-radius, 4px);
 }
 </style>
