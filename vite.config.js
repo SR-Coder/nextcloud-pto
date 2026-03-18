@@ -9,21 +9,13 @@ export default defineConfig({
     },
     build: {
         outDir: 'js',
-        emptyOutDir: true,
+        emptyOutDir: false,
         rollupOptions: {
-            input: {
-                main: resolve(__dirname, 'src/main.js'),
-                'admin-settings': resolve(__dirname, 'src/admin-settings.js'),
-            },
+            input: resolve(__dirname, 'src/main.js'),
             output: {
-                entryFileNames: 'pto-[name].js',
-                assetFileNames: (assetInfo) => {
-                    // Ensure CSS files use the correct naming pattern
-                    if (assetInfo.name && assetInfo.name.endsWith('.css')) {
-                        return 'pto-[name].css'
-                    }
-                    return 'pto-[name].[ext]'
-                },
+                format: 'iife',
+                entryFileNames: 'pto-main.js',
+                assetFileNames: 'pto-main.[ext]',
             },
         },
     },

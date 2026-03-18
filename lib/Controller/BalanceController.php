@@ -68,4 +68,20 @@ class BalanceController extends Controller {
             return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
         }
     }
+
+    /**
+     * Assign a policy to a user (create balance)
+     * Admin only
+     * @NoAdminRequired
+     */
+    public function assignPolicy(string $userId, int $policyId, float $initialBalance = 0.0): DataResponse {
+        try {
+            // TODO: Check admin permission
+            $balance = $this->service->createBalance($userId, $policyId, $initialBalance);
+
+            return new DataResponse($balance, Http::STATUS_CREATED);
+        } catch (\Exception $e) {
+            return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+        }
+    }
 }
