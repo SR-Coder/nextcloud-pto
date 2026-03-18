@@ -150,4 +150,36 @@ class BalanceService {
             return false;
         }
     }
+
+    /**
+     * Get all balances for a user with policy information
+     * @return array[]
+     */
+    public function getUserBalancesWithPolicies(string $userId): array {
+        $balances = $this->balanceMapper->findByUser($userId);
+        $result = [];
+
+        foreach ($balances as $balance) {
+            try {
+                $policy = $this->policyMapper->find($balance->getPolicyId());
+                
+                $result[] = [
+                    'policyId' => $policy->getId(),
+                    'policyName' => $policy->getName(),
+                    'policyType' => $policy->getType(),
+                    'availableBalance' => $balance->getBalance(),
+                    'usedBalance' => $balance->getUsedThisYear(),
+                    'pendingBalance' => 0.0, // TODO: Calculate from pending requests
+                    'accrualRate' => $policy->getAccrualRate(),
+                    'accrualPeriod' => $policy->getAccrualPeriod(),
+                    'maxBalance' => $policy->getMaxBalance(),
+                ];
+            } catch (DoesNotExistException $e) {
+                // Skip balances for deleted policies
+                continue;
+            }
+        }
+
+        return $result;
+    }
 }
