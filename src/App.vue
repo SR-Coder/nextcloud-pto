@@ -22,24 +22,26 @@ export default {
 </script>
 
 <style>
-/* Global styles to ensure proper scrolling in Nextcloud */
-#app-content-vue {
+/* Global override for Nextcloud's app container */
+.app-pto {
     height: auto !important;
-    min-height: 100%;
     overflow: visible !important;
+}
+
+#app-content {
+    overflow-y: auto !important;
 }
 </style>
 
 <style scoped>
 #pto-app {
     padding: 20px;
-    max-height: none;
-    overflow-y: auto;
 }
 
 .pto-container {
     max-width: 1200px;
-    margin: 0 auto 60px auto;
+    margin: 0 auto;
+    margin-bottom: 60px;
     background: rgba(255, 255, 255, 0.95);
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -79,6 +81,5 @@ export default {
     padding: 2rem;
     color: #333;
     min-height: 400px;
-    overflow: visible;
 }
 </style>
