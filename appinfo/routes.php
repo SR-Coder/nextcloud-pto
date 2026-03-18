@@ -28,5 +28,9 @@ return [
         ['name' => 'balance#index', 'url' => '/api/v1/balances', 'verb' => 'GET'],
         ['name' => 'balance#show', 'url' => '/api/v1/balances/{policyId}', 'verb' => 'GET'],
         ['name' => 'balance#processAccrual', 'url' => '/api/v1/balances/{policyId}/accrual', 'verb' => 'POST'],
+        
+        // Users API (Admin)
+        ['name' => 'user#index', 'url' => '/api/v1/users', 'verb' => 'GET'],
+        ['name' => 'user#updateManager', 'url' => '/api/v1/users/{userId}/manager', 'verb' => 'PUT'],
     ]
 ];
