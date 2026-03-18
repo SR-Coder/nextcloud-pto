@@ -25,6 +25,7 @@ export default {
 #pto-app {
     padding: 20px;
     min-height: 100vh;
+    padding-bottom: 60px;
 }
 
 .pto-container {
@@ -33,7 +34,7 @@ export default {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    overflow: visible;
 }
 
 .pto-nav {
