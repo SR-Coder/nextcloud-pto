@@ -35,9 +35,9 @@ class BalanceController extends Controller {
      */
     public function index(): DataResponse {
         $userId = $this->getUserId();
-        $balances = $this->service->getUserBalances($userId);
+        $balances = $this->service->getUserBalancesWithPolicies($userId);
 
-        return new DataResponse($balances);
+        return new DataResponse(['balances' => $balances]);
     }
 
     /**
