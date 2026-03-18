@@ -1,105 +1,126 @@
 <template>
     <div class="admin-settings">
-        <h2>PTO Policies</h2>
+        <h2>PTO Administration</h2>
         
+        <!-- Policy Management -->
         <div class="section">
-            <h3>Create New Policy</h3>
-            <form @submit.prevent="createPolicy" class="policy-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Policy Name *</label>
-                        <input v-model="newPolicy.name" type="text" required placeholder="e.g., Vacation, Sick Leave" />
+            <h3>PTO Policies</h3>
+            <p class="section-desc">Create and manage PTO policies for your organization.</p>
+            
+            <details class="collapsible" open>
+                <summary>Create New Policy</summary>
+                <form @submit.prevent="createPolicy" class="policy-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Policy Name *</label>
+                            <input v-model="newPolicy.name" type="text" required placeholder="e.g., Vacation, Sick Leave" />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Policy Type *</label>
+                            <select v-model="newPolicy.type" required>
+                                <option value="">Select type...</option>
+                                <option value="unlimited">Unlimited</option>
+                                <option value="accrual">Accrual-Based</option>
+                                <option value="fixed">Fixed Annual</option>
+                            </select>
+                        </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label>Policy Type *</label>
-                        <select v-model="newPolicy.type" required>
-                            <option value="">Select type...</option>
-                            <option value="unlimited">Unlimited</option>
-                            <option value="accrual">Accrual-Based</option>
-                            <option value="fixed">Fixed Annual</option>
-                        </select>
+                    <div v-if="newPolicy.type === 'accrual'" class="form-row">
+                        <div class="form-group">
+                            <label>Accrual Rate (hours) *</label>
+                            <input v-model.number="newPolicy.accrualRate" type="number" step="0.5" min="0" required />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Accrual Period *</label>
+                            <select v-model="newPolicy.accrualPeriod" required>
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="yearly">Yearly</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Max Balance (hours)</label>
+                            <input v-model.number="newPolicy.maxBalance" type="number" step="0.5" min="0" placeholder="Leave empty for no cap" />
+                        </div>
                     </div>
+                    
+                    <div v-if="newPolicy.type === 'fixed'" class="form-row">
+                        <div class="form-group">
+                            <label>Annual Hours *</label>
+                            <input v-model.number="newPolicy.fixedAnnualHours" type="number" step="0.5" min="0" required />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Reset Date (MM-DD)</label>
+                            <input v-model="newPolicy.resetDate" type="text" pattern="\d{2}-\d{2}" placeholder="01-01" />
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary" :disabled="creating">
+                        {{ creating ? 'Creating...' : 'Create Policy' }}
+                    </button>
+                    
+                    <div v-if="policyError" class="error">{{ policyError }}</div>
+                    <div v-if="policySuccess" class="success">{{ policySuccess }}</div>
+                </form>
+            </details>
+            
+            <div class="subsection">
+                <h4>Existing Policies</h4>
+                
+                <div v-if="loadingPolicies" class="loading">Loading policies...</div>
+                
+                <div v-else-if="policies.length === 0" class="placeholder">
+                    No policies created yet. Create one above to get started.
                 </div>
                 
-                <div v-if="newPolicy.type === 'accrual'" class="form-row">
-                    <div class="form-group">
-                        <label>Accrual Rate (hours) *</label>
-                        <input v-model.number="newPolicy.accrualRate" type="number" step="0.5" min="0" required />
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Accrual Period *</label>
-                        <select v-model="newPolicy.accrualPeriod" required>
-                            <option value="daily">Daily</option>
-                            <option value="weekly">Weekly</option>
-                            <option value="monthly">Monthly</option>
-                            <option value="yearly">Yearly</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Max Balance (hours)</label>
-                        <input v-model.number="newPolicy.maxBalance" type="number" step="0.5" min="0" placeholder="Leave empty for no cap" />
-                    </div>
-                </div>
-                
-                <div v-if="newPolicy.type === 'fixed'" class="form-row">
-                    <div class="form-group">
-                        <label>Annual Hours *</label>
-                        <input v-model.number="newPolicy.fixedAnnualHours" type="number" step="0.5" min="0" required />
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Reset Date (MM-DD)</label>
-                        <input v-model="newPolicy.resetDate" type="text" pattern="\\d{2}-\\d{2}" placeholder="01-01" />
+                <div v-else class="policies-list">
+                    <div v-for="policy in policies" :key="policy.id" class="policy-card">
+                        <div class="policy-header">
+                            <h5>{{ policy.name }}</h5>
+                            <span class="policy-type">{{ formatType(policy.type) }}</span>
+                        </div>
+                        
+                        <div class="policy-details">
+                            <div v-if="policy.type === 'accrual'">
+                                <strong>Accrual:</strong> {{ policy.accrualRate }} hours {{ policy.accrualPeriod }}
+                                <span v-if="policy.maxBalance"> (max: {{ policy.maxBalance }} hours)</span>
+                            </div>
+                            <div v-if="policy.type === 'fixed'">
+                                <strong>Annual:</strong> {{ policy.fixedAnnualHours }} hours
+                                <span v-if="policy.resetDate"> (resets {{ policy.resetDate }})</span>
+                            </div>
+                            <div v-if="policy.type === 'unlimited'">
+                                <strong>Unlimited time off</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="policy-actions">
+                            <button @click="togglePolicy(policy)" class="btn-secondary">
+                                {{ policy.enabled ? 'Disable' : 'Enable' }}
+                            </button>
+                        </div>
                     </div>
                 </div>
-                
-                <button type="submit" class="btn-primary" :disabled="creating">
-                    {{ creating ? 'Creating...' : 'Create Policy' }}
-                </button>
-                
-                <div v-if="error" class="error">{{ error }}</div>
-                <div v-if="success" class="success">{{ success }}</div>
-            </form>
+            </div>
         </div>
         
+        <!-- Manager Assignment -->
         <div class="section">
-            <h3>Existing Policies</h3>
+            <h3>Manager Assignment</h3>
+            <p class="section-desc">Assign users who can approve PTO requests.</p>
             
-            <div v-if="loading" class="loading">Loading policies...</div>
+            <div v-if="loadingUsers" class="loading">Loading users...</div>
             
-            <div v-else-if="policies.length === 0" class="placeholder">
-                No policies created yet. Create one above to get started.
-            </div>
-            
-            <div v-else class="policies-list">
-                <div v-for="policy in policies" :key="policy.id" class="policy-card">
-                    <div class="policy-header">
-                        <h4>{{ policy.name }}</h4>
-                        <span class="policy-type">{{ formatType(policy.type) }}</span>
-                    </div>
-                    
-                    <div class="policy-details">
-                        <div v-if="policy.type === 'accrual'">
-                            <strong>Accrual:</strong> {{ policy.accrualRate }} hours {{ policy.accrualPeriod }}
-                            <span v-if="policy.maxBalance"> (max: {{ policy.maxBalance }} hours)</span>
-                        </div>
-                        <div v-if="policy.type === 'fixed'">
-                            <strong>Annual:</strong> {{ policy.fixedAnnualHours }} hours
-                            <span v-if="policy.resetDate"> (resets {{ policy.resetDate }})</span>
-                        </div>
-                        <div v-if="policy.type === 'unlimited'">
-                            <strong>Unlimited time off</strong>
-                        </div>
-                    </div>
-                    
-                    <div class="policy-actions">
-                        <button @click="togglePolicy(policy)" class="btn-secondary">
-                            {{ policy.enabled ? 'Disable' : 'Enable' }}
-                        </button>
-                    </div>
+            <div v-else class="user-roles">
+                <div class="placeholder">
+                    Coming soon: User management integration with Nextcloud groups.
+                    Managers will be able to approve requests from their team members.
                 </div>
             </div>
         </div>
@@ -121,10 +142,13 @@ export default {
                 fixedAnnualHours: null,
                 resetDate: '',
             },
-            loading: false,
+            loadingPolicies: false,
             creating: false,
-            error: null,
-            success: null,
+            policyError: null,
+            policySuccess: null,
+            
+            users: [],
+            loadingUsers: false,
         }
     },
     mounted() {
@@ -132,26 +156,22 @@ export default {
     },
     methods: {
         async loadPolicies() {
-            this.loading = true
+            this.loadingPolicies = true
             try {
-                const response = await fetch('/index.php/apps/pto/api/v1/policies', {
-                    headers: {
-                        'requesttoken': document.head.querySelector('meta[name="requesttoken"]')?.content || '',
-                    },
-                })
+                const response = await fetch('/index.php/apps/pto/api/v1/policies')
                 if (!response.ok) throw new Error('Failed to load policies')
                 this.policies = await response.json()
             } catch (err) {
                 console.error('Load policies error:', err)
             } finally {
-                this.loading = false
+                this.loadingPolicies = false
             }
         },
         
         async createPolicy() {
             this.creating = true
-            this.error = null
-            this.success = null
+            this.policyError = null
+            this.policySuccess = null
             
             try {
                 const payload = {
@@ -174,20 +194,22 @@ export default {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'requesttoken': document.head.querySelector('meta[name="requesttoken"]')?.content || '',
                     },
                     body: JSON.stringify(payload),
                 })
                 
-                if (!response.ok) throw new Error('Failed to create policy')
+                if (!response.ok) {
+                    const error = await response.json()
+                    throw new Error(error.error || 'Failed to create policy')
+                }
                 
-                this.success = 'Policy created successfully!'
+                this.policySuccess = 'Policy created successfully!'
                 this.resetForm()
                 await this.loadPolicies()
                 
-                setTimeout(() => { this.success = null }, 3000)
+                setTimeout(() => { this.policySuccess = null }, 3000)
             } catch (err) {
-                this.error = err.message
+                this.policyError = err.message
             } finally {
                 this.creating = false
             }
@@ -199,7 +221,6 @@ export default {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'requesttoken': document.head.querySelector('meta[name="requesttoken"]')?.content || '',
                     },
                     body: JSON.stringify({ enabled: !policy.enabled }),
                 })
@@ -236,7 +257,7 @@ export default {
 
 <style scoped>
 .admin-settings {
-    max-width: 1000px;
+    max-width: 1200px;
 }
 
 .admin-settings h2 {
@@ -257,8 +278,43 @@ export default {
     color: #333;
 }
 
+.section-desc {
+    color: #666;
+    margin-top: -0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.collapsible {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+}
+
+.collapsible summary {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    font-weight: 500;
+    background: #f8f8f8;
+    border-radius: 4px;
+}
+
+.collapsible summary:hover {
+    background: #f0f0f0;
+}
+
+.collapsible[open] summary {
+    border-bottom: 1px solid #e0e0e0;
+    border-radius: 4px 4px 0 0;
+}
+
 .policy-form {
-    max-width: 700px;
+    padding: 1rem;
+}
+
+.subsection h4 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    color: #555;
 }
 
 .form-row {
@@ -370,7 +426,7 @@ export default {
     margin-bottom: 0.5rem;
 }
 
-.policy-header h4 {
+.policy-header h5 {
     margin: 0;
     color: #333;
 }
@@ -391,5 +447,10 @@ export default {
 .policy-actions {
     display: flex;
     gap: 0.5rem;
+}
+
+.user-roles {
+    display: grid;
+    gap: 0.75rem;
 }
 </style>

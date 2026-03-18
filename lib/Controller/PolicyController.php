@@ -43,26 +43,21 @@ class PolicyController extends Controller {
 
     /**
      * @NoAdminRequired
+     * @NoCSRFRequired
      */
-    public function create(
-        string $name,
-        string $type,
-        ?float $accrualRate = null,
-        ?string $accrualPeriod = null,
-        ?float $maxBalance = null,
-        ?float $fixedAnnualHours = null,
-        ?string $resetDate = null
-    ): DataResponse {
+    public function create(): DataResponse {
         try {
             // TODO: Check admin permission
+            $data = json_decode(file_get_contents('php://input'), true);
+            
             $policy = $this->service->create(
-                $name,
-                $type,
-                $accrualRate,
-                $accrualPeriod,
-                $maxBalance,
-                $fixedAnnualHours,
-                $resetDate
+                $data['name'],
+                $data['type'],
+                $data['accrualRate'] ?? null,
+                $data['accrualPeriod'] ?? null,
+                $data['maxBalance'] ?? null,
+                $data['fixedAnnualHours'] ?? null,
+                $data['resetDate'] ?? null
             );
 
             return new DataResponse($policy, Http::STATUS_CREATED);
@@ -73,30 +68,23 @@ class PolicyController extends Controller {
 
     /**
      * @NoAdminRequired
+     * @NoCSRFRequired
      */
-    public function update(
-        int $id,
-        ?string $name = null,
-        ?string $type = null,
-        ?float $accrualRate = null,
-        ?string $accrualPeriod = null,
-        ?float $maxBalance = null,
-        ?float $fixedAnnualHours = null,
-        ?string $resetDate = null,
-        ?bool $enabled = null
-    ): DataResponse {
+    public function update(int $id): DataResponse {
         try {
             // TODO: Check admin permission
+            $data = json_decode(file_get_contents('php://input'), true);
+            
             $policy = $this->service->update(
                 $id,
-                $name,
-                $type,
-                $accrualRate,
-                $accrualPeriod,
-                $maxBalance,
-                $fixedAnnualHours,
-                $resetDate,
-                $enabled
+                $data['name'] ?? null,
+                $data['type'] ?? null,
+                $data['accrualRate'] ?? null,
+                $data['accrualPeriod'] ?? null,
+                $data['maxBalance'] ?? null,
+                $data['fixedAnnualHours'] ?? null,
+                $data['resetDate'] ?? null,
+                $data['enabled'] ?? null
             );
 
             return new DataResponse($policy);
@@ -107,6 +95,7 @@ class PolicyController extends Controller {
 
     /**
      * @NoAdminRequired
+     * @NoCSRFRequired
      */
     public function destroy(int $id): DataResponse {
         try {
