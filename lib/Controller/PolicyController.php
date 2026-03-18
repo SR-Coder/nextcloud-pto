@@ -21,14 +21,16 @@ class PolicyController extends Controller {
 
     /**
      * @NoAdminRequired
+     * @NoCSRFRequired
      */
     public function index(): DataResponse {
-        $policies = $this->service->findEnabled();
+        $policies = $this->service->findAll();
         return new DataResponse($policies);
     }
 
     /**
      * @NoAdminRequired
+     * @NoCSRFRequired
      */
     public function show(int $id): DataResponse {
         try {
@@ -40,7 +42,7 @@ class PolicyController extends Controller {
     }
 
     /**
-     * Admin only
+     * @NoAdminRequired
      */
     public function create(
         string $name,
@@ -70,21 +72,31 @@ class PolicyController extends Controller {
     }
 
     /**
-     * Admin only
+     * @NoAdminRequired
      */
-    public function update(int $id, array $data): DataResponse {
+    public function update(
+        int $id,
+        ?string $name = null,
+        ?string $type = null,
+        ?float $accrualRate = null,
+        ?string $accrualPeriod = null,
+        ?float $maxBalance = null,
+        ?float $fixedAnnualHours = null,
+        ?string $resetDate = null,
+        ?bool $enabled = null
+    ): DataResponse {
         try {
             // TODO: Check admin permission
             $policy = $this->service->update(
                 $id,
-                $data['name'] ?? null,
-                $data['type'] ?? null,
-                $data['accrualRate'] ?? null,
-                $data['accrualPeriod'] ?? null,
-                $data['maxBalance'] ?? null,
-                $data['fixedAnnualHours'] ?? null,
-                $data['resetDate'] ?? null,
-                $data['enabled'] ?? null
+                $name,
+                $type,
+                $accrualRate,
+                $accrualPeriod,
+                $maxBalance,
+                $fixedAnnualHours,
+                $resetDate,
+                $enabled
             );
 
             return new DataResponse($policy);
@@ -94,7 +106,7 @@ class PolicyController extends Controller {
     }
 
     /**
-     * Admin only
+     * @NoAdminRequired
      */
     public function destroy(int $id): DataResponse {
         try {
