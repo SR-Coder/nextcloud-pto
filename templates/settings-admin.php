@@ -1,6 +1,6 @@
 <?php
 script('pto', 'pto-admin-settings');
-style('pto', 'admin-settings');
+style('pto', 'pto-admin-settings');
 ?>
 
 <div id="pto-admin-settings" class="section">
