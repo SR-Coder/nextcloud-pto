@@ -120,4 +120,46 @@ class UserController extends Controller {
             json_encode($managers)
         );
     }
+
+    /**
+     * Get manager assignment summary for all users
+     * Shows who manages whom and who can approve requests
+     * 
+     * @NoCSRFRequired
+     */
+    #[NoCSRFRequired]
+    public function managerSummary(): JSONResponse {
+        // TODO: Add admin permission check
+        
+        $users = [];
+        
+        foreach ($this->userManager->search('') as $user) {
+            $userId = $user->getUID();
+            $managerUids = $user->getManagerUids();
+            
+            // Check if this user manages anyone
+            $canApprove = $this->groupManager->isAdmin($userId) || $this->managesAnyUsers($userId);
+            
+            $users[] = [
+                'id' => $userId,
+                'displayName' => $user->getDisplayName(),
+                'managers' => $managerUids,
+                'canApprove' => $canApprove,
+            ];
+        }
+        
+        return new JSONResponse(['users' => $users]);
+    }
+
+    /**
+     * Check if user manages any other users
+     */
+    private function managesAnyUsers(string $userId): bool {
+        foreach ($this->userManager->search('') as $user) {
+            if (in_array($userId, $user->getManagerUids(), true)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
