@@ -338,6 +338,10 @@ export default {
     box-sizing: border-box;
 }
 
+.form-group select option {
+    padding: 0.5rem;
+}
+
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
