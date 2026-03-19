@@ -105,6 +105,8 @@
 </template>
 
 <script>
+import { apiGet, apiPost, apiPut } from '../api.js'
+
 export default {
     name: 'PolicyManagement',
     data() {
@@ -132,9 +134,7 @@ export default {
         async loadPolicies() {
             this.loadingPolicies = true
             try {
-                const response = await fetch('/index.php/apps/pto/api/v1/policies')
-                if (!response.ok) throw new Error('Failed to load policies')
-                this.policies = await response.json()
+                this.policies = await apiGet('policies')
             } catch (err) {
                 console.error('Load policies error:', err)
             } finally {
@@ -164,18 +164,7 @@ export default {
                     if (this.newPolicy.resetDate) payload.resetDate = this.newPolicy.resetDate
                 }
                 
-                const response = await fetch('/index.php/apps/pto/api/v1/policies', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                })
-                
-                if (!response.ok) {
-                    const error = await response.json()
-                    throw new Error(error.error || 'Failed to create policy')
-                }
+                await apiPost('policies', payload)
                 
                 this.policySuccess = 'Policy created successfully!'
                 this.resetForm()
@@ -191,15 +180,7 @@ export default {
         
         async togglePolicy(policy) {
             try {
-                const response = await fetch(`/index.php/apps/pto/api/v1/policies/${policy.id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ enabled: !policy.enabled }),
-                })
-                
-                if (!response.ok) throw new Error('Failed to update policy')
+                await apiPut(`policies/${policy.id}`, { enabled: !policy.enabled })
                 await this.loadPolicies()
             } catch (err) {
                 console.error('Toggle policy error:', err)

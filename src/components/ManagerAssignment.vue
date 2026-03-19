@@ -54,6 +54,8 @@
 </template>
 
 <script>
+import { apiGet } from '../api.js'
+
 export default {
     name: 'ManagerAssignment',
     data() {
@@ -72,10 +74,7 @@ export default {
             this.error = null
             
             try {
-                const response = await fetch('/index.php/apps/pto/api/v1/users/managers')
-                if (!response.ok) throw new Error('Failed to load user manager data')
-                
-                const data = await response.json()
+                const data = await apiGet('users/managers')
                 this.users = data.users || []
             } catch (err) {
                 console.error('Load users error:', err)
