@@ -102,44 +102,48 @@ export default {
     display: block;
     font-weight: 500;
     margin-bottom: 0.5rem;
-    color: #333;
+    color: var(--color-main-text);
 }
 
 .form-group select {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid var(--color-border-dark);
+    border-radius: var(--border-radius);
     font-size: 1rem;
     font-family: inherit;
     min-height: 44px;
+    background-color: var(--color-main-background);
+    color: var(--color-main-text);
 }
 
 .settings-hint {
-    color: #666;
+    color: var(--color-text-lighter);
     font-size: 0.875rem;
     margin-top: 0.5rem;
     line-height: 1.4;
 }
 
 .loading {
-    color: #666;
+    color: var(--color-text-lighter);
     padding: 1rem 0;
 }
 
 .success-message {
-    background: #d4edda;
-    color: #155724;
+    background: var(--color-success);
+    color: var(--color-primary-element-text);
     padding: 0.75rem 1rem;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     margin-top: 1rem;
+    opacity: 0.9;
 }
 
 .error-message {
-    background: #f8d7da;
-    color: #721c24;
+    background: var(--color-error);
+    color: var(--color-primary-element-text);
     padding: 0.75rem 1rem;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     margin-top: 1rem;
+    opacity: 0.9;
 }
 </style>

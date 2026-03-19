@@ -43,7 +43,7 @@ export default {
 .balance-display {
     padding: 1rem;
     border: 1px solid var(--color-border);
-    border-radius: 4px;
+    border-radius: var(--border-radius);
 }
 
 .balance-value {
