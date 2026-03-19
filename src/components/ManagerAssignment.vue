@@ -93,21 +93,22 @@ export default {
 }
 
 .info-box {
-    background: var(--color-success-background, #e8f5e9);
-    border: 1px solid var(--color-success, #4caf50);
-    border-radius: var(--border-radius, 4px);
+    background: var(--color-background-hover);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-success);
+    border-radius: var(--border-radius);
     padding: 1.5rem;
     margin-bottom: 2rem;
 }
 
 .info-box p {
     margin: 0.5rem 0;
-    color: var(--color-main-text, #333);
+    color: var(--color-main-text);
 }
 
 .info-box ol {
     margin: 0.5rem 0 0.5rem 1.5rem;
-    color: var(--color-main-text, #333);
+    color: var(--color-main-text);
 }
 
 .manager-summary h4 {
