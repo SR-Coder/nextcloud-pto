@@ -9,12 +9,12 @@ return [
         
         // Requests API
         ['name' => 'request#index', 'url' => '/api/v1/requests', 'verb' => 'GET'],
+        ['name' => 'request#pending', 'url' => '/api/v1/requests/pending', 'verb' => 'GET'],
         ['name' => 'request#show', 'url' => '/api/v1/requests/{id}', 'verb' => 'GET'],
         ['name' => 'request#create', 'url' => '/api/v1/requests', 'verb' => 'POST'],
         ['name' => 'request#approve', 'url' => '/api/v1/requests/{id}/approve', 'verb' => 'POST'],
         ['name' => 'request#deny', 'url' => '/api/v1/requests/{id}/deny', 'verb' => 'POST'],
         ['name' => 'request#cancel', 'url' => '/api/v1/requests/{id}/cancel', 'verb' => 'POST'],
-        ['name' => 'request#pending', 'url' => '/api/v1/requests/pending', 'verb' => 'GET'],
         ['name' => 'request#approvals', 'url' => '/api/v1/requests/{id}/approvals', 'verb' => 'GET'],
         
         // Policies API
@@ -32,7 +32,7 @@ return [
         
         // Users API (Admin)
         ['name' => 'user#index', 'url' => '/api/v1/users', 'verb' => 'GET'],
-        ['name' => 'user#updateManager', 'url' => '/api/v1/users/{userId}/manager', 'verb' => 'PUT'],
         ['name' => 'user#managerSummary', 'url' => '/api/v1/users/managers', 'verb' => 'GET'],
+        ['name' => 'user#updateManager', 'url' => '/api/v1/users/{userId}/manager', 'verb' => 'PUT'],
     ]
 ];
