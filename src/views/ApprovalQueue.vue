@@ -83,6 +83,32 @@
             </div>
         </div>
         
+        <!-- Approval History (collapsible) -->
+        <details v-if="isManager && historicalRequests.length > 0" class="history-section" style="margin-top: 2rem;">
+            <summary><h3>Approval History</h3></summary>
+            
+            <div v-if="loadingHistory" class="loading-message">Loading history...</div>
+            
+            <div v-else class="history-list">
+                <div v-for="request in historicalRequests" :key="request.id" class="history-card">
+                    <div class="history-header">
+                        <div class="user-info">
+                            <span class="user-name">{{ request.userName }}</span>
+                            <span class="user-id">{{ request.userId }}</span>
+                        </div>
+                        <span :class="'status-badge ' + request.status">{{ request.status }}</span>
+                    </div>
+                    
+                    <div class="history-details">
+                        <span class="detail-item"><strong>Type:</strong> {{ formatLeaveType(request.leaveType) }}</span>
+                        <span class="detail-item"><strong>Dates:</strong> {{ formatDateRange(request.startDate, request.endDate) }}</span>
+                        <span class="detail-item"><strong>Hours:</strong> {{ request.hours }}</span>
+                        <span class="detail-item"><strong>Decided:</strong> {{ formatDate(request.updatedAt) }}</span>
+                    </div>
+                </div>
+            </div>
+        </details>
+        
         <div v-if="error" class="error-message">{{ error }}</div>
         <div v-if="success" class="success-message">{{ success }}</div>
     </div>
@@ -97,9 +123,11 @@ export default {
         return {
             isManager: false,
             pendingRequests: [],
+            historicalRequests: [],
             comments: {},
             processing: {},
             loading: false,
+            loadingHistory: false,
             error: null,
             success: null,
         }
@@ -107,12 +135,27 @@ export default {
     mounted() {
         this.checkManagerStatus()
         this.loadPendingRequests()
+        this.loadHistory()
     },
     methods: {
         async checkManagerStatus() {
             // TODO: Add endpoint to check if current user is a manager
             // For now, assume they are if they can access this page
             this.isManager = true
+        },
+        
+        async loadHistory() {
+            this.loadingHistory = true
+            
+            try {
+                const data = await apiGet('requests/history')
+                this.historicalRequests = Array.isArray(data) ? data : (data.requests || [])
+            } catch (err) {
+                console.error('Load history error:', err)
+                // Don't show error - history is optional
+            } finally {
+                this.loadingHistory = false
+            }
         },
         
         async loadPendingRequests() {
@@ -421,5 +464,97 @@ export default {
     background: var(--color-success-background, #e8f5e9);
     border-radius: var(--border-radius, 4px);
     margin-top: 1rem;
+}
+
+/* Approval History */
+.history-section {
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-large);
+    padding: 1rem;
+    background: var(--color-background-hover);
+}
+
+.history-section summary {
+    cursor: pointer;
+    font-weight: 600;
+    padding: 0.5rem;
+    list-style: none;
+    user-select: none;
+}
+
+.history-section summary h3 {
+    display: inline;
+    margin: 0;
+    color: var(--color-main-text);
+}
+
+.history-section summary::-webkit-details-marker {
+    display: none;
+}
+
+.history-section summary::before {
+    content: '▶';
+    display: inline-block;
+    margin-right: 0.5rem;
+    transition: transform 0.2s;
+}
+
+.history-section[open] summary::before {
+    transform: rotate(90deg);
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.history-card {
+    background: var(--color-main-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.history-header .user-name {
+    font-weight: 600;
+    color: var(--color-main-text);
+    margin-right: 0.5rem;
+}
+
+.history-header .user-id {
+    color: var(--color-text-lighter);
+    font-size: 0.875rem;
+}
+
+.history-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    color: var(--color-main-text);
+}
+
+.detail-item {
+    font-size: 0.875rem;
+}
+
+.status-badge.approved {
+    background: var(--color-success);
+    color: white;
+}
+
+.status-badge.denied {
+    background: var(--color-error);
+    color: white;
 }
 </style>

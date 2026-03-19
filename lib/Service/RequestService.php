@@ -80,6 +80,38 @@ class RequestService {
     }
 
     /**
+     * Get approval history for a manager (approved/denied requests)
+     * @return array
+     */
+    public function findHistoryForManager(string $managerId, int $limit = 50): array {
+        // Get all approved/denied requests (admin) or for managed users
+        if ($this->authService->isAdmin($managerId)) {
+            // Admin sees all approved/denied requests
+            $approved = $this->requestMapper->findByStatus('approved', $limit);
+            $denied = $this->requestMapper->findByStatus('denied', $limit);
+            $requests = array_merge($approved, $denied);
+        } else {
+            $managedUserIds = $this->authService->getManagedUsers($managerId);
+            
+            if (empty($managedUserIds)) {
+                return [];
+            }
+            
+            // Get approved and denied requests for managed users
+            $approved = $this->requestMapper->findByUsers($managedUserIds, 'approved', $limit);
+            $denied = $this->requestMapper->findByUsers($managedUserIds, 'denied', $limit);
+            $requests = array_merge($approved, $denied);
+        }
+        
+        // Sort by updated_at descending (most recent first)
+        usort($requests, function($a, $b) {
+            return strtotime($b->getUpdatedAt()) - strtotime($a->getUpdatedAt());
+        });
+        
+        return array_slice($requests, 0, $limit);
+    }
+
+    /**
      * Create a new PTO request
      * @throws Exception
      */

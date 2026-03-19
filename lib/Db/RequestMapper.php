@@ -49,13 +49,17 @@ class RequestMapper extends QBMapper {
     /**
      * @return Request[]
      */
-    public function findByStatus(string $status): array {
+    public function findByStatus(string $status, ?int $limit = null): array {
         $qb = $this->db->getQueryBuilder();
 
         $qb->select('*')
             ->from($this->getTableName())
             ->where($qb->expr()->eq('status', $qb->createNamedParameter($status)))
-            ->orderBy('created_at', 'ASC');
+            ->orderBy('updated_at', 'DESC');
+
+        if ($limit !== null) {
+            $qb->setMaxResults($limit);
+        }
 
         return $this->findEntities($qb);
     }
@@ -100,9 +104,10 @@ class RequestMapper extends QBMapper {
      * Find requests by multiple user IDs
      * @param string[] $userIds Array of user IDs
      * @param string|null $status Optional status filter
+     * @param int|null $limit Optional result limit
      * @return Request[]
      */
-    public function findByUsers(array $userIds, ?string $status = null): array {
+    public function findByUsers(array $userIds, ?string $status = null, ?int $limit = null): array {
         if (empty($userIds)) {
             return [];
         }
@@ -117,7 +122,11 @@ class RequestMapper extends QBMapper {
             $qb->andWhere($qb->expr()->eq('status', $qb->createNamedParameter($status)));
         }
 
-        $qb->orderBy('created_at', 'DESC');
+        $qb->orderBy('updated_at', 'DESC');
+
+        if ($limit !== null) {
+            $qb->setMaxResults($limit);
+        }
 
         return $this->findEntities($qb);
     }
