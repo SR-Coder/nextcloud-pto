@@ -1,14 +1,15 @@
 <?php
 
-declare(strict_types=1);
-
-// PHPUnit bootstrap file
+/**
+ * PHPUnit bootstrap for PTO Tracker tests
+ */
 
 if (!defined('PHPUNIT_RUN')) {
     define('PHPUNIT_RUN', 1);
 }
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../../lib/base.php';
 
-// Mock Nextcloud environment for testing
-// In real integration tests, you'd set up a test Nextcloud instance
+// Additional test setup can go here
+\OC::$loader->addValidRoot(OC::$SERVERROOT . '/tests');
+\OC_App::loadApp('pto');
