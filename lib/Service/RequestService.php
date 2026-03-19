@@ -19,19 +19,22 @@ class RequestService {
     private UserRoleMapper $userRoleMapper;
     private BalanceService $balanceService;
     private AuthorizationService $authService;
+    private NotificationService $notificationService;
 
     public function __construct(
         RequestMapper $requestMapper,
         ApprovalMapper $approvalMapper,
         UserRoleMapper $userRoleMapper,
         BalanceService $balanceService,
-        AuthorizationService $authService
+        AuthorizationService $authService,
+        NotificationService $notificationService
     ) {
         $this->requestMapper = $requestMapper;
         $this->approvalMapper = $approvalMapper;
         $this->userRoleMapper = $userRoleMapper;
         $this->balanceService = $balanceService;
         $this->authService = $authService;
+        $this->notificationService = $notificationService;
     }
 
     /**
@@ -110,7 +113,12 @@ class RequestService {
         $request->setCreatedAt((new DateTime())->format('Y-m-d H:i:s'));
         $request->setUpdatedAt((new DateTime())->format('Y-m-d H:i:s'));
 
-        return $this->requestMapper->insert($request);
+        $createdRequest = $this->requestMapper->insert($request);
+        
+        // Send notification to managers
+        $this->notificationService->notifyRequestSubmitted($createdRequest);
+
+        return $createdRequest;
     }
 
     /**
@@ -151,8 +159,10 @@ class RequestService {
             $request->getHours()
         );
 
+        // Send notification to requester
+        $this->notificationService->notifyRequestApproved($request, $comments);
+
         // TODO: Create calendar event
-        // TODO: Send notification
 
         return $request;
     }
@@ -188,7 +198,8 @@ class RequestService {
         $approval->setActedAt((new DateTime())->format('Y-m-d H:i:s'));
         $this->approvalMapper->insert($approval);
 
-        // TODO: Send notification
+        // Send notification to requester
+        $this->notificationService->notifyRequestDenied($request, $comments);
 
         return $request;
     }
