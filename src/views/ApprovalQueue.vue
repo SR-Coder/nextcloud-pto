@@ -84,10 +84,14 @@
         </div>
         
         <!-- Approval History (collapsible) -->
-        <details v-if="isManager && historicalRequests.length > 0" class="history-section" style="margin-top: 2rem;">
+        <details v-if="isManager" class="history-section" style="margin-top: 2rem;">
             <summary><h3>Approval History</h3></summary>
             
             <div v-if="loadingHistory" class="loading-message">Loading history...</div>
+            
+            <div v-else-if="historicalRequests.length === 0" class="no-history">
+                <p>No approval history yet.</p>
+            </div>
             
             <div v-else class="history-list">
                 <div v-for="request in historicalRequests" :key="request.id" class="history-card">
@@ -103,7 +107,7 @@
                         <span class="detail-item"><strong>Type:</strong> {{ formatLeaveType(request.leaveType) }}</span>
                         <span class="detail-item"><strong>Dates:</strong> {{ formatDateRange(request.startDate, request.endDate) }}</span>
                         <span class="detail-item"><strong>Hours:</strong> {{ request.hours }}</span>
-                        <span class="detail-item"><strong>Decided:</strong> {{ formatDate(request.updatedAt) }}</span>
+                        <span class="detail-item"><strong>Decided:</strong> {{ formatDateTime(request.updatedAt) }}</span>
                     </div>
                 </div>
             </div>
@@ -149,7 +153,9 @@ export default {
             
             try {
                 const data = await apiGet('requests/history')
+                console.log('History API response:', data)
                 this.historicalRequests = Array.isArray(data) ? data : (data.requests || [])
+                console.log('Loaded history count:', this.historicalRequests.length)
             } catch (err) {
                 console.error('Load history error:', err)
                 // Don't show error - history is optional
