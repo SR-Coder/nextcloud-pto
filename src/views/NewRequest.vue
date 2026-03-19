@@ -327,6 +327,7 @@ export default {
     border-radius: var(--border-radius, 4px);
     font-size: 1rem;
     font-family: inherit;
+    min-height: 44px;
     box-sizing: border-box;
 }
 
