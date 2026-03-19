@@ -124,6 +124,37 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Calendar Integration -->
+        <div class="section">
+            <h3>📅 Calendar Integration</h3>
+            <p class="section-desc">Automatically create calendar events when PTO is approved.</p>
+            
+            <div v-if="loadingCalendars" class="loading">Loading calendars...</div>
+            
+            <div v-else class="calendar-settings">
+                <div class="form-group">
+                    <label>PTO Calendar</label>
+                    <select v-model="selectedCalendar" @change="saveCalendarSetting">
+                        <option :value="null">No calendar (disabled)</option>
+                        <option 
+                            v-for="calendar in writableCalendars" 
+                            :key="calendar.uri" 
+                            :value="calendar.uri"
+                        >
+                            {{ calendar.displayName }}
+                        </option>
+                    </select>
+                    <p class="form-help">
+                        When a PTO request is approved, an all-day event will be created in this calendar.
+                        Use a shared calendar to make team time off visible to everyone.
+                    </p>
+                </div>
+                
+                <div v-if="calendarError" class="error-message">{{ calendarError }}</div>
+                <div v-if="calendarSuccess" class="success-message">{{ calendarSuccess }}</div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -149,10 +180,22 @@ export default {
             
             users: [],
             loadingUsers: false,
+            
+            calendars: [],
+            selectedCalendar: null,
+            loadingCalendars: false,
+            calendarError: null,
+            calendarSuccess: null,
+        }
+    },
+    computed: {
+        writableCalendars() {
+            return this.calendars.filter(c => c.writable)
         }
     },
     mounted() {
         this.loadPolicies()
+        this.loadCalendars()
     },
     methods: {
         async loadPolicies() {
@@ -250,6 +293,52 @@ export default {
                 accrual: 'Accrual-Based',
                 fixed: 'Fixed Annual',
             }[type] || type
+        },
+        
+        async loadCalendars() {
+            this.loadingCalendars = true
+            this.calendarError = null
+            
+            try {
+                const response = await fetch('/index.php/apps/pto/api/v1/calendar/list')
+                if (!response.ok) throw new Error('Failed to load calendars')
+                
+                const data = await response.json()
+                this.calendars = data.calendars || []
+                this.selectedCalendar = data.selectedUri
+            } catch (err) {
+                this.calendarError = 'Failed to load calendars: ' + err.message
+            } finally {
+                this.loadingCalendars = false
+            }
+        },
+        
+        async saveCalendarSetting() {
+            this.calendarError = null
+            this.calendarSuccess = null
+            
+            try {
+                const response = await fetch('/index.php/apps/pto/api/v1/calendar/select', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'requesttoken': OC.requestToken,
+                    },
+                    body: JSON.stringify({ uri: this.selectedCalendar }),
+                })
+                
+                if (!response.ok) throw new Error('Failed to save calendar setting')
+                
+                this.calendarSuccess = this.selectedCalendar 
+                    ? 'Calendar integration enabled!' 
+                    : 'Calendar integration disabled'
+                
+                setTimeout(() => { this.calendarSuccess = null }, 3000)
+            } catch (err) {
+                this.calendarError = err.message
+                // Revert selection on error
+                await this.loadCalendars()
+            }
         },
     },
 }
@@ -453,5 +542,36 @@ export default {
 .user-roles {
     display: grid;
     gap: 0.75rem;
+}
+
+.calendar-settings {
+    max-width: 600px;
+}
+
+.calendar-settings .form-group {
+    margin-bottom: 0;
+}
+
+.calendar-settings .form-help {
+    color: #666;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
+.success-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+}
+
+.error-message {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    margin-top: 1rem;
 }
 </style>
