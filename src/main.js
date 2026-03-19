@@ -1,12 +1,11 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import App from './App.vue'
+import Navigation from './components/Navigation.vue'
 import Dashboard from './views/Dashboard.vue'
 import MyRequests from './views/MyRequests.vue'
 import NewRequest from './views/NewRequest.vue'
 import ApprovalQueue from './views/ApprovalQueue.vue'
-
-console.log('[PTO] Script loaded')
 
 const routes = [
     { path: '/', component: Dashboard },
@@ -20,32 +19,28 @@ const router = createRouter({
     routes,
 })
 
-console.log('[PTO] Router created')
-
 function initApp() {
-    console.log('[PTO] initApp called, readyState:', document.readyState)
-    const mountPoint = document.getElementById('app-content-vue')
-    console.log('[PTO] Mount point:', mountPoint)
+    const navMount = document.getElementById('app-navigation-vue')
+    const contentMount = document.getElementById('app-content-vue')
     
-    if (!mountPoint) {
-        console.error('[PTO] Mount point #app-content-vue not found!')
+    if (!navMount || !contentMount) {
+        console.error('[PTO] Mount points not found!')
         return
     }
     
-    console.log('[PTO] Creating Vue app')
-    const app = createApp(App)
-    app.use(router)
-    console.log('[PTO] Mounting to #app-content-vue')
-    app.mount('#app-content-vue')
-    console.log('[PTO] App mounted successfully!')
+    // Mount navigation
+    const navApp = createApp(Navigation)
+    navApp.use(router)
+    navApp.mount('#app-navigation-vue')
+    
+    // Mount main content
+    const contentApp = createApp(App)
+    contentApp.use(router)
+    contentApp.mount('#app-content-vue')
 }
 
-console.log('[PTO] Checking document.readyState:', document.readyState)
-
 if (document.readyState === 'loading') {
-    console.log('[PTO] DOM loading, adding event listener')
     document.addEventListener('DOMContentLoaded', initApp)
 } else {
-    console.log('[PTO] DOM already loaded, calling initApp immediately')
     initApp()
 }

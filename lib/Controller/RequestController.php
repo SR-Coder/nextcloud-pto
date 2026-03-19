@@ -232,10 +232,22 @@ class RequestController extends Controller {
      * @NoCSRFRequired
      */
     public function pending(): DataResponse {
-        $managerId = $this->getUserId();
-        $requests = $this->service->findPendingForManager($managerId);
-
-        return new DataResponse($requests);
+        try {
+            $managerId = $this->getUserId();
+            \OC::$server->getLogger()->info('Finding pending requests for manager: ' . $managerId, ['app' => 'pto']);
+            
+            $requests = $this->service->findPendingForManager($managerId);
+            
+            \OC::$server->getLogger()->info('Found ' . count($requests) . ' pending requests', ['app' => 'pto']);
+            
+            return new DataResponse($requests);
+        } catch (\Exception $e) {
+            \OC::$server->getLogger()->error('Error finding pending requests: ' . $e->getMessage(), [
+                'app' => 'pto',
+                'exception' => $e
+            ]);
+            return new DataResponse(['error' => 'Failed to load pending requests'], Http::STATUS_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
