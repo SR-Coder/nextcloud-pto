@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OCA\PTO\Controller;
 
 use OCA\PTO\AppInfo\Application;
+use OCA\PTO\Service\AuthorizationService;
 use OCA\PTO\Service\BalanceService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -14,15 +15,18 @@ use OCP\IUserSession;
 
 class BalanceController extends Controller {
     private BalanceService $service;
+    private AuthorizationService $authService;
     private IUserSession $userSession;
 
     public function __construct(
         IRequest $request,
         BalanceService $service,
+        AuthorizationService $authService,
         IUserSession $userSession
     ) {
         parent::__construct(Application::APP_ID, $request);
         $this->service = $service;
+        $this->authService = $authService;
         $this->userSession = $userSession;
     }
 
@@ -31,6 +35,7 @@ class BalanceController extends Controller {
     }
 
     /**
+     * Get current user's balances only
      * @NoAdminRequired
      * @NoCSRFRequired
      */
@@ -42,6 +47,7 @@ class BalanceController extends Controller {
     }
 
     /**
+     * Get current user's balance for a specific policy
      * @NoAdminRequired
      * @NoCSRFRequired
      */
@@ -59,7 +65,6 @@ class BalanceController extends Controller {
     /**
      * Process accrual for current user
      * @NoAdminRequired
-     * @NoCSRFRequired
      */
     public function processAccrual(int $policyId): DataResponse {
         try {
@@ -73,16 +78,16 @@ class BalanceController extends Controller {
     }
 
     /**
-     * Assign a policy to a user (create balance)
-     * Admin only
+     * Assign a policy to a user (create balance) - admin only
      * @NoAdminRequired
-     * @NoCSRFRequired
      */
     public function assignPolicy(string $userId, int $policyId, float $initialBalance = 0.0): DataResponse {
         try {
-            // TODO: Check admin permission
-            $balance = $this->service->createBalance($userId, $policyId, $initialBalance);
+            if (!$this->authService->isAdmin($this->getUserId())) {
+                return new DataResponse(['error' => 'Only administrators can assign policies'], Http::STATUS_FORBIDDEN);
+            }
 
+            $balance = $this->service->createBalance($userId, $policyId, $initialBalance);
             return new DataResponse($balance, Http::STATUS_CREATED);
         } catch (\Exception $e) {
             return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
