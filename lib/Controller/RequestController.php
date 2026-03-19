@@ -81,6 +81,40 @@ class RequestController extends Controller {
         float $hours,
         ?string $notes = null
     ): DataResponse {
+        // Validate leave type
+        $validLeaveTypes = ['vacation', 'sick', 'personal', 'other'];
+        if (!in_array($leaveType, $validLeaveTypes, true)) {
+            return new DataResponse([
+                'error' => 'Invalid leave type. Must be one of: ' . implode(', ', $validLeaveTypes)
+            ], Http::STATUS_BAD_REQUEST);
+        }
+
+        // Validate hours
+        if ($hours <= 0) {
+            return new DataResponse(['error' => 'Hours must be greater than 0'], Http::STATUS_BAD_REQUEST);
+        }
+
+        if ($hours > 2000) {
+            return new DataResponse(['error' => 'Hours cannot exceed 2000'], Http::STATUS_BAD_REQUEST);
+        }
+
+        // Validate dates
+        try {
+            $start = new \DateTime($startDate);
+            $end = new \DateTime($endDate);
+        } catch (\Exception $e) {
+            return new DataResponse(['error' => 'Invalid date format. Use YYYY-MM-DD'], Http::STATUS_BAD_REQUEST);
+        }
+
+        if ($start > $end) {
+            return new DataResponse(['error' => 'Start date must be before or equal to end date'], Http::STATUS_BAD_REQUEST);
+        }
+
+        // Validate notes length
+        if ($notes !== null && strlen($notes) > 5000) {
+            return new DataResponse(['error' => 'Notes cannot exceed 5000 characters'], Http::STATUS_BAD_REQUEST);
+        }
+
         try {
             $userId = $this->getUserId();
             $request = $this->service->createRequest(
@@ -104,6 +138,11 @@ class RequestController extends Controller {
      * @NoAdminRequired
      */
     public function approve(int $id, ?string $comments = null): DataResponse {
+        // Validate comments length
+        if ($comments !== null && strlen($comments) > 2000) {
+            return new DataResponse(['error' => 'Comments cannot exceed 2000 characters'], Http::STATUS_BAD_REQUEST);
+        }
+
         try {
             $managerId = $this->getUserId();
             $request = $this->service->find($id);
@@ -126,6 +165,11 @@ class RequestController extends Controller {
      * @NoAdminRequired
      */
     public function deny(int $id, ?string $comments = null): DataResponse {
+        // Validate comments length
+        if ($comments !== null && strlen($comments) > 2000) {
+            return new DataResponse(['error' => 'Comments cannot exceed 2000 characters'], Http::STATUS_BAD_REQUEST);
+        }
+
         try {
             $managerId = $this->getUserId();
             $request = $this->service->find($id);

@@ -69,6 +69,43 @@ class PolicyController extends Controller {
             }
 
             $data = json_decode(file_get_contents('php://input'), true);
+
+            // Validate required fields
+            if (empty($data['name']) || empty($data['type'])) {
+                return new DataResponse(['error' => 'Name and type are required'], Http::STATUS_BAD_REQUEST);
+            }
+
+            // Validate policy name length
+            if (strlen($data['name']) > 100) {
+                return new DataResponse(['error' => 'Policy name cannot exceed 100 characters'], Http::STATUS_BAD_REQUEST);
+            }
+
+            // Validate policy type
+            $validTypes = ['unlimited', 'accrual', 'fixed'];
+            if (!in_array($data['type'], $validTypes, true)) {
+                return new DataResponse([
+                    'error' => 'Invalid policy type. Must be one of: ' . implode(', ', $validTypes)
+                ], Http::STATUS_BAD_REQUEST);
+            }
+
+            // Validate accrual-specific fields
+            if ($data['type'] === 'accrual') {
+                if (!isset($data['accrualRate']) || $data['accrualRate'] <= 0) {
+                    return new DataResponse(['error' => 'Accrual policies require a positive accrual rate'], Http::STATUS_BAD_REQUEST);
+                }
+
+                $validPeriods = ['daily', 'weekly', 'monthly', 'yearly'];
+                if (empty($data['accrualPeriod']) || !in_array($data['accrualPeriod'], $validPeriods, true)) {
+                    return new DataResponse([
+                        'error' => 'Accrual policies require a valid period: ' . implode(', ', $validPeriods)
+                    ], Http::STATUS_BAD_REQUEST);
+                }
+            }
+
+            // Validate fixed-specific fields
+            if ($data['type'] === 'fixed' && (!isset($data['fixedAnnualHours']) || $data['fixedAnnualHours'] <= 0)) {
+                return new DataResponse(['error' => 'Fixed policies require positive annual hours'], Http::STATUS_BAD_REQUEST);
+            }
             
             $policy = $this->service->create(
                 $data['name'],
