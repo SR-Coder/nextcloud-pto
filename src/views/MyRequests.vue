@@ -67,6 +67,8 @@
 </template>
 
 <script>
+import { apiGet, apiPost } from '../api.js'
+
 export default {
     name: 'MyRequests',
     data() {
@@ -88,15 +90,12 @@ export default {
             this.error = null
             
             try {
-                let url = '/index.php/apps/pto/api/v1/requests'
+                let endpoint = 'requests'
                 if (this.statusFilter) {
-                    url += `?status=${this.statusFilter}`
+                    endpoint += `?status=${this.statusFilter}`
                 }
                 
-                const response = await fetch(url)
-                if (!response.ok) throw new Error('Failed to load requests')
-                
-                const data = await response.json()
+                const data = await apiGet(endpoint)
                 this.requests = data.requests || data || []
             } catch (err) {
                 console.error('Load requests error:', err)
@@ -114,14 +113,7 @@ export default {
             this.success = null
             
             try {
-                const response = await fetch(`/index.php/apps/pto/api/v1/requests/${requestId}/cancel`, {
-                    method: 'POST',
-                })
-                
-                if (!response.ok) {
-                    const errorData = await response.json()
-                    throw new Error(errorData.error || 'Failed to cancel request')
-                }
+                await apiPost(`requests/${requestId}/cancel`)
                 
                 this.success = 'Request cancelled'
                 await this.loadRequests()

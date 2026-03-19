@@ -89,6 +89,8 @@
 </template>
 
 <script>
+import { apiGet, apiPost } from '../api.js'
+
 export default {
     name: 'ApprovalQueue',
     data() {
@@ -118,10 +120,7 @@ export default {
             this.error = null
             
             try {
-                const response = await fetch('/index.php/apps/pto/api/v1/requests/pending')
-                if (!response.ok) throw new Error('Failed to load pending requests')
-                
-                const data = await response.json()
+                const data = await apiGet('requests/pending')
                 this.pendingRequests = data.requests || []
             } catch (err) {
                 console.error('Load pending requests error:', err)
@@ -142,20 +141,9 @@ export default {
             this.success = null
             
             try {
-                const response = await fetch(`/index.php/apps/pto/api/v1/requests/${requestId}/approve`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        comments: this.comments[requestId] || null,
-                    }),
+                await apiPost(`requests/${requestId}/approve`, {
+                    comments: this.comments[requestId] || null,
                 })
-                
-                if (!response.ok) {
-                    const errorData = await response.json()
-                    throw new Error(errorData.error || 'Failed to approve request')
-                }
                 
                 this.success = 'Request approved successfully'
                 this.pendingRequests = this.pendingRequests.filter(r => r.id !== requestId)
@@ -180,20 +168,9 @@ export default {
             this.success = null
             
             try {
-                const response = await fetch(`/index.php/apps/pto/api/v1/requests/${requestId}/deny`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        comments: this.comments[requestId] || null,
-                    }),
+                await apiPost(`requests/${requestId}/deny`, {
+                    comments: this.comments[requestId] || null,
                 })
-                
-                if (!response.ok) {
-                    const errorData = await response.json()
-                    throw new Error(errorData.error || 'Failed to deny request')
-                }
                 
                 this.success = 'Request denied'
                 this.pendingRequests = this.pendingRequests.filter(r => r.id !== requestId)

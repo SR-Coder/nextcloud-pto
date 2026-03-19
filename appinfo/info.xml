@@ -16,7 +16,7 @@ Features:
 - Manager delegation
 - Email notifications
     ]]></description>
-    <version>0.1.3</version>
+    <version>0.1.4</version>
     <licence>MIT</licence>
     <author mail="jim@sparerecords.com" homepage="https://github.com/SR-Coder">JCR Labs</author>
     <namespace>PTO</namespace>

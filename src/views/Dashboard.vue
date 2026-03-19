@@ -87,6 +87,8 @@
 </template>
 
 <script>
+import { apiGet } from '../api.js'
+
 export default {
     name: 'Dashboard',
     data() {
@@ -108,10 +110,7 @@ export default {
             this.error = null
             
             try {
-                const response = await fetch('/index.php/apps/pto/api/v1/balances')
-                if (!response.ok) throw new Error('Failed to load balances')
-                
-                const data = await response.json()
+                const data = await apiGet('balances')
                 this.balances = data.balances || []
             } catch (err) {
                 console.error('Load balances error:', err)
@@ -125,10 +124,7 @@ export default {
             this.loadingRequests = true
             
             try {
-                const response = await fetch('/index.php/apps/pto/api/v1/requests')
-                if (!response.ok) throw new Error('Failed to load requests')
-                
-                const data = await response.json()
+                const data = await apiGet('requests')
                 const now = new Date()
                 
                 // Filter for upcoming approved or pending requests

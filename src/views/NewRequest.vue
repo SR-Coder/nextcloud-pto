@@ -123,6 +123,8 @@
 </template>
 
 <script>
+import { apiGet, apiPost } from '../api.js'
+
 export default {
     name: 'NewRequest',
     data() {
@@ -169,10 +171,7 @@ export default {
             this.error = null
             
             try {
-                const response = await fetch('/index.php/apps/pto/api/v1/balances')
-                if (!response.ok) throw new Error('Failed to load policies')
-                
-                const data = await response.json()
+                const data = await apiGet('balances')
                 this.policies = data.balances || []
             } catch (err) {
                 console.error('Load policies error:', err)
@@ -232,25 +231,14 @@ export default {
                     throw new Error('Total hours must be greater than 0')
                 }
                 
-                const response = await fetch('/index.php/apps/pto/api/v1/requests', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        policyId: parseInt(this.form.policyId),
-                        leaveType: this.form.leaveType,
-                        startDate: this.form.startDate,
-                        endDate: this.form.endDate,
-                        hours: this.form.totalHours,
-                        notes: this.form.notes || null,
-                    }),
+                await apiPost('requests', {
+                    policyId: parseInt(this.form.policyId),
+                    leaveType: this.form.leaveType,
+                    startDate: this.form.startDate,
+                    endDate: this.form.endDate,
+                    hours: this.form.totalHours,
+                    notes: this.form.notes || null,
                 })
-                
-                if (!response.ok) {
-                    const errorData = await response.json()
-                    throw new Error(errorData.error || 'Failed to submit request')
-                }
                 
                 this.success = true
                 this.resetForm()

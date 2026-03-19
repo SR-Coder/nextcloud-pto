@@ -43,7 +43,6 @@ class PolicyController extends Controller {
 
     /**
      * @NoAdminRequired
-     * @NoCSRFRequired
      */
     public function create(): DataResponse {
         try {
@@ -68,7 +67,6 @@ class PolicyController extends Controller {
 
     /**
      * @NoAdminRequired
-     * @NoCSRFRequired
      */
     public function update(int $id): DataResponse {
         try {
@@ -95,7 +93,6 @@ class PolicyController extends Controller {
 
     /**
      * @NoAdminRequired
-     * @NoCSRFRequired
      */
     public function destroy(int $id): DataResponse {
         try {

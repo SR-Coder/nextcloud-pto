@@ -57,7 +57,6 @@ class RequestController extends Controller {
 
     /**
      * @NoAdminRequired
-     * @NoCSRFRequired
      */
     public function create(
         int $policyId,
@@ -87,7 +86,6 @@ class RequestController extends Controller {
 
     /**
      * @NoAdminRequired
-     * @NoCSRFRequired
      */
     public function approve(int $id, ?string $comments = null): DataResponse {
         try {
@@ -102,7 +100,6 @@ class RequestController extends Controller {
 
     /**
      * @NoAdminRequired
-     * @NoCSRFRequired
      */
     public function deny(int $id, ?string $comments = null): DataResponse {
         try {
@@ -117,7 +114,6 @@ class RequestController extends Controller {
 
     /**
      * @NoAdminRequired
-     * @NoCSRFRequired
      */
     public function cancel(int $id): DataResponse {
         try {
