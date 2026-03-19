@@ -136,7 +136,7 @@ export default {
                 return
             }
             
-            this.$set(this.processing, requestId, true)
+            this.processing[requestId] = true
             this.error = null
             this.success = null
             
@@ -154,7 +154,7 @@ export default {
                 console.error('Approve request error:', err)
                 this.error = err.message
             } finally {
-                this.$set(this.processing, requestId, false)
+                this.processing[requestId] = false
             }
         },
         
@@ -163,7 +163,7 @@ export default {
                 return
             }
             
-            this.$set(this.processing, requestId, true)
+            this.processing[requestId] = true
             this.error = null
             this.success = null
             
@@ -181,7 +181,7 @@ export default {
                 console.error('Deny request error:', err)
                 this.error = err.message
             } finally {
-                this.$set(this.processing, requestId, false)
+                this.processing[requestId] = false
             }
         },
         

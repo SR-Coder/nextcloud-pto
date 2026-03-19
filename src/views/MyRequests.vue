@@ -108,7 +108,7 @@ export default {
         async cancelRequest(requestId) {
             if (!confirm('Are you sure you want to cancel this request?')) return
             
-            this.$set(this.cancelling, requestId, true)
+            this.cancelling[requestId] = true
             this.error = null
             this.success = null
             
@@ -121,7 +121,7 @@ export default {
             } catch (err) {
                 this.error = err.message
             } finally {
-                this.$set(this.cancelling, requestId, false)
+                this.cancelling[requestId] = false
             }
         },
         

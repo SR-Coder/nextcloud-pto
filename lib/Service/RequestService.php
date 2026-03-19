@@ -57,20 +57,23 @@ class RequestService {
      * @return Request[]
      */
     public function findPendingForManager(string $managerId): array {
-        // If admin, return all pending requests
+        // Get all pending requests (admin) or for managed users
         if ($this->authService->isAdmin($managerId)) {
-            return $this->requestMapper->findPending();
+            $requests = $this->requestMapper->findPending();
+        } else {
+            $managedUserIds = $this->authService->getManagedUsers($managerId);
+            
+            if (empty($managedUserIds)) {
+                return [];
+            }
+            
+            $requests = $this->requestMapper->findByUsers($managedUserIds, 'pending');
         }
         
-        // Get all users this manager manages
-        $managedUserIds = $this->authService->getManagedUsers($managerId);
-        
-        if (empty($managedUserIds)) {
-            return [];
-        }
-        
-        // Get pending requests for those users
-        return $this->requestMapper->findByUsers($managedUserIds, 'pending');
+        // Filter out the manager's own requests - can't approve your own PTO
+        return array_values(array_filter($requests, function($request) use ($managerId) {
+            return $request->getUserId() !== $managerId;
+        }));
     }
 
     /**
