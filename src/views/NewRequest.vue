@@ -18,10 +18,7 @@
                         <select id="policy" v-model="form.policyId" required @change="updateBalanceInfo">
                             <option value="">Select a policy...</option>
                             <option v-for="policy in policies" :key="policy.policyId" :value="policy.policyId">
-                                {{ policy.policyName }} 
-                                <template v-if="policy.policyType !== 'unlimited'">
-                                    ({{ policy.availableBalance }} hrs available)
-                                </template>
+                                {{ policy.policyName }}{{ policy.policyType !== 'unlimited' ? ` (${policy.availableBalance} hrs)` : '' }}
                             </option>
                         </select>
                     </div>
@@ -332,11 +329,13 @@ export default {
 .form-group input,
 .form-group select,
 .form-group textarea {
+    width: 100%;
     padding: 0.75rem;
     border: 1px solid var(--color-border-dark, #ddd);
     border-radius: var(--border-radius, 4px);
     font-size: 1rem;
     font-family: inherit;
+    box-sizing: border-box;
 }
 
 .form-group input:focus,
