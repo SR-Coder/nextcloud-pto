@@ -48,6 +48,45 @@ class CalendarService {
     }
 
     /**
+     * Escape text for iCalendar format per RFC 5545
+     * Escapes: backslash, semicolon, comma, and converts newlines to \n
+     */
+    private function escapeIcalText(string $text): string {
+        // Escape backslashes first
+        $text = str_replace('\\', '\\\\', $text);
+        // Escape semicolons
+        $text = str_replace(';', '\\;', $text);
+        // Escape commas
+        $text = str_replace(',', '\\,', $text);
+        // Convert newlines to literal \n
+        $text = str_replace("\r\n", "\\n", $text);
+        $text = str_replace("\n", "\\n", $text);
+        $text = str_replace("\r", "\\n", $text);
+        return $text;
+    }
+
+    /**
+     * Find a calendar by URI across all users
+     */
+    private function findCalendarByUri(string $targetUri): ?ICreateFromString {
+        // Get all users
+        $users = $this->userManager->search('');
+        
+        foreach ($users as $user) {
+            $principal = 'principals/users/' . $user->getUID();
+            $calendars = $this->calendarManager->getCalendarsForPrincipal($principal);
+            
+            foreach ($calendars as $calendar) {
+                if ($calendar->getUri() === $targetUri && $calendar instanceof ICreateFromString) {
+                    return $calendar;
+                }
+            }
+        }
+        
+        return null;
+    }
+
+    /**
      * Get the configured PTO calendar URI from settings
      */
     public function getPTOCalendarUri(): ?string {
@@ -83,15 +122,14 @@ class CalendarService {
                 return false;
             }
 
-            $principal = 'principals/users/' . $userId;
-            $calendars = $this->calendarManager->getCalendarsForPrincipal($principal, [$calendarUri]);
+            // Find the calendar across all users
+            // The calendar owner might not be the PTO requester
+            $calendar = $this->findCalendarByUri($calendarUri);
 
-            if (empty($calendars)) {
-                $this->logger->warning('PTO calendar not found for user', ['userId' => $userId, 'calendarUri' => $calendarUri]);
+            if ($calendar === null) {
+                $this->logger->warning('PTO calendar not found', ['calendarUri' => $calendarUri]);
                 return false;
             }
-
-            $calendar = $calendars[0];
             
             if (!($calendar instanceof ICreateFromString)) {
                 $this->logger->warning('PTO calendar is not writable', ['userId' => $userId, 'calendarUri' => $calendarUri]);
@@ -102,36 +140,45 @@ class CalendarService {
             $user = $this->userManager->get($userId);
             $displayName = $user ? $user->getDisplayName() : $userId;
 
-            // Build the event
-            $summary = sprintf('[PTO] %s - %s', $displayName, $leaveType);
-            $description = sprintf(
+            // Build the event (RFC 5545 compliant text escaping)
+            $summary = $this->escapeIcalText(sprintf('[PTO] %s - %s', $displayName, $leaveType));
+            $description = $this->escapeIcalText(sprintf(
                 "Time Off Request\n\nDuration: %.1f hours\n%s",
                 $hours,
                 $notes ? "Notes: {$notes}" : ''
-            );
+            ));
 
-            // Convert to DateTimeImmutable with proper timezone
-            $start = \DateTimeImmutable::createFromMutable($startDate);
-            $end = \DateTimeImmutable::createFromMutable($endDate);
-            
-            // Make it an all-day event
-            $start = $start->setTime(0, 0, 0);
+            // Format dates for all-day events (YYYYMMDD)
+            $startFormatted = $startDate->format('Ymd');
             // End date should be the day AFTER the last day (iCal convention)
-            $end = $end->setTime(0, 0, 0)->add(new \DateInterval('P1D'));
+            $endDatePlusOne = (clone $endDate)->add(new \DateInterval('P1D'));
+            $endFormatted = $endDatePlusOne->format('Ymd');
+            
+            // Generate unique UID
+            $uuid = bin2hex(random_bytes(16));
+            $uid = sprintf('%s@nextcloud', $uuid);
+            $timestamp = (new \DateTime())->format('Ymd\THis\Z');
 
-            $builder = $this->calendarManager->createEventBuilder()
-                ->setStartDate($start)
-                ->setEndDate($end)
-                ->setSummary($summary)
-                ->setDescription($description)
-                ->setAllDay(true);
+            // Build iCal content manually
+            $ics = "BEGIN:VCALENDAR\r\n";
+            $ics .= "VERSION:2.0\r\n";
+            $ics .= "PRODID:-//Nextcloud PTO//EN\r\n";
+            $ics .= "BEGIN:VEVENT\r\n";
+            $ics .= "UID:{$uid}\r\n";
+            $ics .= "DTSTAMP:{$timestamp}\r\n";
+            $ics .= "DTSTART;VALUE=DATE:{$startFormatted}\r\n";
+            $ics .= "DTEND;VALUE=DATE:{$endFormatted}\r\n";
+            $ics .= "SUMMARY:{$summary}\r\n";
+            $ics .= "DESCRIPTION:{$description}\r\n";
+            $ics .= "STATUS:CONFIRMED\r\n";
+            $ics .= "TRANSP:OPAQUE\r\n";
+            $ics .= "END:VEVENT\r\n";
+            $ics .= "END:VCALENDAR\r\n";
 
             // Generate unique filename
-            $uuid = bin2hex(random_bytes(16));
             $filename = sprintf('pto-%s.ics', $uuid);
 
             // Create the event in the calendar
-            $ics = $builder->toIcs();
             $calendar->createFromString($filename, $ics);
 
             $this->logger->info('Created PTO calendar event', [
