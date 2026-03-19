@@ -59,7 +59,6 @@ class BalanceController extends Controller {
     /**
      * Process accrual for current user
      * @NoAdminRequired
-     * @NoCSRFRequired
      */
     public function processAccrual(int $policyId): DataResponse {
         try {
@@ -76,7 +75,6 @@ class BalanceController extends Controller {
      * Assign a policy to a user (create balance)
      * Admin only
      * @NoAdminRequired
-     * @NoCSRFRequired
      */
     public function assignPolicy(string $userId, int $policyId, float $initialBalance = 0.0): DataResponse {
         try {
