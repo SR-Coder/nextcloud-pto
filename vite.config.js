@@ -14,7 +14,7 @@ export default defineConfig({
         rollupOptions: {
             input: resolve(__dirname, 'src/main.js'),
             output: {
-                format: 'iife', // THIS is the key line!
+                format: 'iife',
                 entryFileNames: 'pto-main.js',
                 assetFileNames: (assetInfo) => {
                     if (assetInfo.name && assetInfo.name.endsWith('.css')) {

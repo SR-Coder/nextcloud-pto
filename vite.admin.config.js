@@ -12,16 +12,10 @@ export default defineConfig({
         emptyOutDir: false,
         minify: false,
         rollupOptions: {
-            input: resolve(import.meta.dirname, 'src/admin-settings.js'),
+            input: resolve(__dirname, 'src/admin-settings.js'),
             output: {
                 format: 'iife',
                 entryFileNames: 'pto-admin-settings.js',
-                assetFileNames: (assetInfo) => {
-                    if (assetInfo.name && assetInfo.name.endsWith('.css')) {
-                        return 'pto-admin-settings.css'
-                    }
-                    return 'pto-admin-settings.[ext]'
-                },
             },
         },
     },

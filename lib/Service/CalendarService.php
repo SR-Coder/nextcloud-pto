@@ -106,6 +106,7 @@ class CalendarService {
 
     /**
      * Create a PTO event in the calendar when a request is approved
+     * Supports both NC28+ (event builder) and NC27 (manual iCal)
      */
     public function createPTOEvent(
         string $userId,
@@ -140,55 +141,12 @@ class CalendarService {
             $user = $this->userManager->get($userId);
             $displayName = $user ? $user->getDisplayName() : $userId;
 
-            // Build the event (RFC 5545 compliant text escaping)
-            $summary = $this->escapeIcalText(sprintf('[PTO] %s - %s', $displayName, $leaveType));
-            $description = $this->escapeIcalText(sprintf(
-                "Time Off Request\n\nDuration: %.1f hours\n%s",
-                $hours,
-                $notes ? "Notes: {$notes}" : ''
-            ));
-
-            // Format dates for all-day events (YYYYMMDD)
-            $startFormatted = $startDate->format('Ymd');
-            // End date should be the day AFTER the last day (iCal convention)
-            $endDatePlusOne = (clone $endDate)->add(new \DateInterval('P1D'));
-            $endFormatted = $endDatePlusOne->format('Ymd');
-            
-            // Generate unique UID
-            $uuid = bin2hex(random_bytes(16));
-            $uid = sprintf('%s@nextcloud', $uuid);
-            $timestamp = (new \DateTime())->format('Ymd\THis\Z');
-
-            // Build iCal content manually
-            $ics = "BEGIN:VCALENDAR\r\n";
-            $ics .= "VERSION:2.0\r\n";
-            $ics .= "PRODID:-//Nextcloud PTO//EN\r\n";
-            $ics .= "BEGIN:VEVENT\r\n";
-            $ics .= "UID:{$uid}\r\n";
-            $ics .= "DTSTAMP:{$timestamp}\r\n";
-            $ics .= "DTSTART;VALUE=DATE:{$startFormatted}\r\n";
-            $ics .= "DTEND;VALUE=DATE:{$endFormatted}\r\n";
-            $ics .= "SUMMARY:{$summary}\r\n";
-            $ics .= "DESCRIPTION:{$description}\r\n";
-            $ics .= "STATUS:CONFIRMED\r\n";
-            $ics .= "TRANSP:OPAQUE\r\n";
-            $ics .= "END:VEVENT\r\n";
-            $ics .= "END:VCALENDAR\r\n";
-
-            // Generate unique filename
-            $filename = sprintf('pto-%s.ics', $uuid);
-
-            // Create the event in the calendar
-            $calendar->createFromString($filename, $ics);
-
-            $this->logger->info('Created PTO calendar event', [
-                'userId' => $userId,
-                'leaveType' => $leaveType,
-                'startDate' => $startDate->format('Y-m-d'),
-                'endDate' => $endDate->format('Y-m-d'),
-            ]);
-
-            return true;
+            // Try modern event builder (NC28+) first, fall back to manual iCal (NC27)
+            if (method_exists($this->calendarManager, 'createEventBuilder')) {
+                return $this->createEventWithBuilder($calendar, $userId, $displayName, $leaveType, $startDate, $endDate, $hours, $notes);
+            } else {
+                return $this->createEventManual($calendar, $userId, $displayName, $leaveType, $startDate, $endDate, $hours, $notes);
+            }
         } catch (\Exception $e) {
             $this->logger->error('Failed to create PTO calendar event', [
                 'userId' => $userId,
@@ -196,5 +154,116 @@ class CalendarService {
             ]);
             return false;
         }
+    }
+
+    /**
+     * Create event using modern event builder API (NC28+)
+     */
+    private function createEventWithBuilder(
+        ICreateFromString $calendar,
+        string $userId,
+        string $displayName,
+        string $leaveType,
+        \DateTime $startDate,
+        \DateTime $endDate,
+        float $hours,
+        ?string $notes
+    ): bool {
+        // Build the event
+        $summary = sprintf('[PTO] %s - %s', $displayName, $leaveType);
+        $description = sprintf(
+            "Time Off Request\n\nDuration: %.1f hours\n%s",
+            $hours,
+            $notes ? "Notes: {$notes}" : ''
+        );
+
+        // Convert to DateTimeImmutable for event builder
+        $start = \DateTimeImmutable::createFromMutable($startDate)->setTime(0, 0, 0);
+        // End date should be the day AFTER the last day (iCal convention)
+        $end = \DateTimeImmutable::createFromMutable($endDate)->setTime(0, 0, 0)->add(new \DateInterval('P1D'));
+
+        $builder = $this->calendarManager->createEventBuilder()
+            ->setStartDate($start)
+            ->setEndDate($end)
+            ->setSummary($summary)
+            ->setDescription($description)
+            ->setAllDay(true);
+
+        // Create in calendar
+        $builder->createInCalendar($calendar);
+
+        $this->logger->info('Created PTO calendar event (event builder)', [
+            'userId' => $userId,
+            'leaveType' => $leaveType,
+            'startDate' => $startDate->format('Y-m-d'),
+            'endDate' => $endDate->format('Y-m-d'),
+        ]);
+
+        return true;
+    }
+
+    /**
+     * Create event using manual iCal generation (NC27 and below)
+     * RFC 5545 compliant
+     */
+    private function createEventManual(
+        ICreateFromString $calendar,
+        string $userId,
+        string $displayName,
+        string $leaveType,
+        \DateTime $startDate,
+        \DateTime $endDate,
+        float $hours,
+        ?string $notes
+    ): bool {
+        // Build the event (RFC 5545 compliant text escaping)
+        $summary = $this->escapeIcalText(sprintf('[PTO] %s - %s', $displayName, $leaveType));
+        $description = $this->escapeIcalText(sprintf(
+            "Time Off Request\n\nDuration: %.1f hours\n%s",
+            $hours,
+            $notes ? "Notes: {$notes}" : ''
+        ));
+
+        // Format dates for all-day events (YYYYMMDD)
+        $startFormatted = $startDate->format('Ymd');
+        // End date should be the day AFTER the last day (iCal convention)
+        $endDatePlusOne = (clone $endDate)->add(new \DateInterval('P1D'));
+        $endFormatted = $endDatePlusOne->format('Ymd');
+        
+        // Generate unique UID
+        $uuid = bin2hex(random_bytes(16));
+        $uid = sprintf('%s@nextcloud', $uuid);
+        $timestamp = (new \DateTime())->format('Ymd\THis\Z');
+
+        // Build iCal content manually per RFC 5545
+        $ics = "BEGIN:VCALENDAR\r\n";
+        $ics .= "VERSION:2.0\r\n";
+        $ics .= "PRODID:-//Nextcloud PTO//EN\r\n";
+        $ics .= "BEGIN:VEVENT\r\n";
+        $ics .= "UID:{$uid}\r\n";
+        $ics .= "DTSTAMP:{$timestamp}\r\n";
+        $ics .= "DTSTART;VALUE=DATE:{$startFormatted}\r\n";
+        $ics .= "DTEND;VALUE=DATE:{$endFormatted}\r\n";
+        $ics .= "SUMMARY:{$summary}\r\n";
+        $ics .= "DESCRIPTION:{$description}\r\n";
+        $ics .= "STATUS:CONFIRMED\r\n";
+        $ics .= "TRANSP:OPAQUE\r\n";
+        $ics .= "END:VEVENT\r\n";
+        $ics .= "END:VCALENDAR\r\n";
+
+        // Generate unique filename
+        $filename = sprintf('pto-%s.ics', $uuid);
+
+        // Create the event in the calendar
+        $calendar->createFromString($filename, $ics);
+
+        $this->logger->info('Created PTO calendar event (manual iCal)', [
+            'userId' => $userId,
+            'leaveType' => $leaveType,
+            'startDate' => $startDate->format('Y-m-d'),
+            'endDate' => $endDate->format('Y-m-d'),
+        ]);
+
+        return true;
     }
 }
