@@ -16,14 +16,18 @@ Features:
 - Manager delegation
 - Email notifications
     ]]></description>
-    <version>0.1.6</version>
+    <version>0.3.4</version>
     <licence>MIT</licence>
     <author mail="jim@sparerecords.com" homepage="https://github.com/SR-Coder">JCR Labs</author>
     <namespace>PTO</namespace>
     <category>organization</category>
     <bugs>https://github.com/SR-Coder/nextcloud-pto/issues</bugs>
     <repository type="git">https://github.com/SR-Coder/nextcloud-pto.git</repository>
-    <screenshot>https://raw.githubusercontent.com/SR-Coder/nextcloud-pto/main/screenshots/dashboard.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/SR-Coder/nextcloud-pto/main/screenshots/01-dashboard.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/SR-Coder/nextcloud-pto/main/screenshots/02-new-request.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/SR-Coder/nextcloud-pto/main/screenshots/03-my-requests.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/SR-Coder/nextcloud-pto/main/screenshots/04-approvals.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/SR-Coder/nextcloud-pto/main/screenshots/05-admin-settings.png</screenshot>
     <dependencies>
         <nextcloud min-version="25" max-version="27"/>
         <php min-version="8.0"/>

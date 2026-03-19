@@ -151,6 +151,12 @@ class RequestController extends Controller {
             $request = $this->service->find($id);
 
             $requestUserId = $request->getUserId();
+            
+            // Prevent self-approval
+            if ($managerId === $requestUserId) {
+                return new DataResponse(['error' => 'You cannot approve your own request'], Http::STATUS_FORBIDDEN);
+            }
+            
             if (!$this->authService->isManagerOf($managerId, $requestUserId)
                 && !$this->authService->isAdmin($managerId)) {
                 return new DataResponse(['error' => 'You are not authorized to approve this request'], Http::STATUS_FORBIDDEN);
@@ -179,6 +185,12 @@ class RequestController extends Controller {
             $request = $this->service->find($id);
 
             $requestUserId = $request->getUserId();
+            
+            // Prevent self-denial
+            if ($managerId === $requestUserId) {
+                return new DataResponse(['error' => 'You cannot deny your own request. Use cancel instead.'], Http::STATUS_FORBIDDEN);
+            }
+            
             if (!$this->authService->isManagerOf($managerId, $requestUserId)
                 && !$this->authService->isAdmin($managerId)) {
                 return new DataResponse(['error' => 'You are not authorized to deny this request'], Http::STATUS_FORBIDDEN);
@@ -220,10 +232,22 @@ class RequestController extends Controller {
      * @NoCSRFRequired
      */
     public function pending(): DataResponse {
-        $managerId = $this->getUserId();
-        $requests = $this->service->findPendingForManager($managerId);
-
-        return new DataResponse($requests);
+        try {
+            $managerId = $this->getUserId();
+            \OC::$server->getLogger()->info('Finding pending requests for manager: ' . $managerId, ['app' => 'pto']);
+            
+            $requests = $this->service->findPendingForManager($managerId);
+            
+            \OC::$server->getLogger()->info('Found ' . count($requests) . ' pending requests', ['app' => 'pto']);
+            
+            return new DataResponse($requests);
+        } catch (\Exception $e) {
+            \OC::$server->getLogger()->error('Error finding pending requests: ' . $e->getMessage(), [
+                'app' => 'pto',
+                'exception' => $e
+            ]);
+            return new DataResponse(['error' => 'Failed to load pending requests'], Http::STATUS_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

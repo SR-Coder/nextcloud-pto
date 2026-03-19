@@ -226,7 +226,8 @@ export default {
 
 <style scoped>
 .approval-queue {
-    max-width: 1200px;
+    width: 100%;
+    padding: 20px;
 }
 
 .approval-queue h2 {

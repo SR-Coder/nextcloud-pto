@@ -272,7 +272,8 @@ export default {
 
 <style scoped>
 .new-request {
-    max-width: 800px;
+    width: 100%;
+    padding: 20px;
 }
 
 .new-request h2 {
@@ -387,6 +388,7 @@ export default {
     gap: 1rem;
     justify-content: flex-end;
     margin-top: 2rem;
+    /* No fixed positioning - let body scroll naturally per Nextcloud docs */
 }
 
 .btn-primary,
