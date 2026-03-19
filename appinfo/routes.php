@@ -34,5 +34,9 @@ return [
         ['name' => 'user#index', 'url' => '/api/v1/users', 'verb' => 'GET'],
         ['name' => 'user#managerSummary', 'url' => '/api/v1/users/managers', 'verb' => 'GET'],
         ['name' => 'user#updateManager', 'url' => '/api/v1/users/{userId}/manager', 'verb' => 'PUT'],
+        
+        // Calendar Settings API
+        ['name' => 'calendar_settings#getCalendars', 'url' => '/api/v1/calendar/list', 'verb' => 'GET'],
+        ['name' => 'calendar_settings#setCalendar', 'url' => '/api/v1/calendar/select', 'verb' => 'POST'],
     ]
 ];

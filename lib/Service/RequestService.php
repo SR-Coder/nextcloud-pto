@@ -20,6 +20,7 @@ class RequestService {
     private BalanceService $balanceService;
     private AuthorizationService $authService;
     private NotificationService $notificationService;
+    private CalendarService $calendarService;
 
     public function __construct(
         RequestMapper $requestMapper,
@@ -27,7 +28,8 @@ class RequestService {
         UserRoleMapper $userRoleMapper,
         BalanceService $balanceService,
         AuthorizationService $authService,
-        NotificationService $notificationService
+        NotificationService $notificationService,
+        CalendarService $calendarService
     ) {
         $this->requestMapper = $requestMapper;
         $this->approvalMapper = $approvalMapper;
@@ -35,6 +37,7 @@ class RequestService {
         $this->balanceService = $balanceService;
         $this->authService = $authService;
         $this->notificationService = $notificationService;
+        $this->calendarService = $calendarService;
     }
 
     /**
@@ -165,7 +168,22 @@ class RequestService {
         // Send notification to requester
         $this->notificationService->notifyRequestApproved($request, $comments);
 
-        // TODO: Create calendar event
+        // Create calendar event
+        try {
+            $startDate = new DateTime($request->getStartDate());
+            $endDate = new DateTime($request->getEndDate());
+            $this->calendarService->createPTOEvent(
+                $request->getUserId(),
+                $request->getLeaveType(),
+                $startDate,
+                $endDate,
+                $request->getHours(),
+                $request->getNotes()
+            );
+        } catch (\Exception $e) {
+            // Log but don't fail the approval if calendar creation fails
+            // The request is already approved at this point
+        }
 
         return $request;
     }
