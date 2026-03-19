@@ -57,6 +57,19 @@ class BalanceMapper extends QBMapper {
     /**
      * @return Balance[]
      */
+    public function findByPolicy(int $policyId): array {
+        $qb = $this->db->getQueryBuilder();
+
+        $qb->select('*')
+            ->from($this->getTableName())
+            ->where($qb->expr()->eq('policy_id', $qb->createNamedParameter($policyId, IQueryBuilder::PARAM_INT)));
+
+        return $this->findEntities($qb);
+    }
+
+    /**
+     * @return Balance[]
+     */
     public function findAll(): array {
         $qb = $this->db->getQueryBuilder();
 

@@ -182,4 +182,28 @@ class BalanceService {
 
         return $result;
     }
+
+    /**
+     * Process accrual for all users with a specific policy
+     * Called by background job
+     * @return int Number of balances processed
+     */
+    public function processAccrualForPolicy(int $policyId): int {
+        // Get all balances for this policy
+        $balances = $this->balanceMapper->findByPolicy($policyId);
+        $processed = 0;
+
+        foreach ($balances as $balance) {
+            try {
+                $this->processAccrual($balance->getUserId(), $policyId);
+                $processed++;
+            } catch (\Exception $e) {
+                // Log error but continue processing others
+                // TODO: Log to system logger
+                continue;
+            }
+        }
+
+        return $processed;
+    }
 }
