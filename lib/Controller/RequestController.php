@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OCA\PTO\Controller;
 
 use OCA\PTO\AppInfo\Application;
+use OCA\PTO\Service\AuthorizationService;
 use OCA\PTO\Service\RequestService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -14,15 +15,18 @@ use OCP\IUserSession;
 
 class RequestController extends Controller {
     private RequestService $service;
+    private AuthorizationService $authService;
     private IUserSession $userSession;
 
     public function __construct(
         IRequest $request,
         RequestService $service,
+        AuthorizationService $authService,
         IUserSession $userSession
     ) {
         parent::__construct(Application::APP_ID, $request);
         $this->service = $service;
+        $this->authService = $authService;
         $this->userSession = $userSession;
     }
 
@@ -31,6 +35,7 @@ class RequestController extends Controller {
     }
 
     /**
+     * List current user's requests only
      * @NoAdminRequired
      * @NoCSRFRequired
      */
@@ -42,13 +47,22 @@ class RequestController extends Controller {
     }
 
     /**
+     * Show a single request - only if user owns it, is manager, or is admin
      * @NoAdminRequired
      * @NoCSRFRequired
      */
     public function show(int $id): DataResponse {
         try {
+            $userId = $this->getUserId();
             $request = $this->service->find($id);
-            // TODO: Check authorization
+
+            $requestUserId = $request->getUserId();
+            if ($requestUserId !== $userId
+                && !$this->authService->isManagerOf($userId, $requestUserId)
+                && !$this->authService->isAdmin($userId)) {
+                return new DataResponse(['error' => 'Access denied'], Http::STATUS_FORBIDDEN);
+            }
+
             return new DataResponse($request);
         } catch (\Exception $e) {
             return new DataResponse(['error' => $e->getMessage()], Http::STATUS_NOT_FOUND);
@@ -56,6 +70,7 @@ class RequestController extends Controller {
     }
 
     /**
+     * Create a new PTO request for the current user
      * @NoAdminRequired
      */
     public function create(
@@ -85,48 +100,72 @@ class RequestController extends Controller {
     }
 
     /**
+     * Approve a request - only if user is manager of requester or admin
      * @NoAdminRequired
      */
     public function approve(int $id, ?string $comments = null): DataResponse {
         try {
             $managerId = $this->getUserId();
-            $request = $this->service->approveRequest($id, $managerId, $comments);
+            $request = $this->service->find($id);
 
-            return new DataResponse($request);
+            $requestUserId = $request->getUserId();
+            if (!$this->authService->isManagerOf($managerId, $requestUserId)
+                && !$this->authService->isAdmin($managerId)) {
+                return new DataResponse(['error' => 'You are not authorized to approve this request'], Http::STATUS_FORBIDDEN);
+            }
+
+            $result = $this->service->approveRequest($id, $managerId, $comments);
+            return new DataResponse($result);
         } catch (\Exception $e) {
             return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
         }
     }
 
     /**
+     * Deny a request - only if user is manager of requester or admin
      * @NoAdminRequired
      */
     public function deny(int $id, ?string $comments = null): DataResponse {
         try {
             $managerId = $this->getUserId();
-            $request = $this->service->denyRequest($id, $managerId, $comments);
+            $request = $this->service->find($id);
 
-            return new DataResponse($request);
+            $requestUserId = $request->getUserId();
+            if (!$this->authService->isManagerOf($managerId, $requestUserId)
+                && !$this->authService->isAdmin($managerId)) {
+                return new DataResponse(['error' => 'You are not authorized to deny this request'], Http::STATUS_FORBIDDEN);
+            }
+
+            $result = $this->service->denyRequest($id, $managerId, $comments);
+            return new DataResponse($result);
         } catch (\Exception $e) {
             return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
         }
     }
 
     /**
+     * Cancel a request - only the requester can cancel their own request
      * @NoAdminRequired
      */
     public function cancel(int $id): DataResponse {
         try {
             $userId = $this->getUserId();
-            $request = $this->service->cancelRequest($id, $userId);
+            $request = $this->service->find($id);
 
-            return new DataResponse($request);
+            if ($request->getUserId() !== $userId) {
+                return new DataResponse(['error' => 'You can only cancel your own requests'], Http::STATUS_FORBIDDEN);
+            }
+
+            $result = $this->service->cancelRequest($id, $userId);
+            return new DataResponse($result);
         } catch (\Exception $e) {
             return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
         }
     }
 
     /**
+     * Get pending requests for the current user to approve
+     * Only returns requests from users this person manages (or all if admin)
      * @NoAdminRequired
      * @NoCSRFRequired
      */
@@ -138,11 +177,26 @@ class RequestController extends Controller {
     }
 
     /**
+     * Get approval history for a request - only if authorized to view the request
      * @NoAdminRequired
      * @NoCSRFRequired
      */
     public function approvals(int $id): DataResponse {
-        $approvals = $this->service->getApprovals($id);
-        return new DataResponse($approvals);
+        try {
+            $userId = $this->getUserId();
+            $request = $this->service->find($id);
+
+            $requestUserId = $request->getUserId();
+            if ($requestUserId !== $userId
+                && !$this->authService->isManagerOf($userId, $requestUserId)
+                && !$this->authService->isAdmin($userId)) {
+                return new DataResponse(['error' => 'Access denied'], Http::STATUS_FORBIDDEN);
+            }
+
+            $approvals = $this->service->getApprovals($id);
+            return new DataResponse($approvals);
+        } catch (\Exception $e) {
+            return new DataResponse(['error' => $e->getMessage()], Http::STATUS_NOT_FOUND);
+        }
     }
 }
