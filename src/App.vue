@@ -24,11 +24,19 @@ export default {
 /* Global override for Nextcloud's app container */
 .app-pto {
     height: auto !important;
+    min-height: 100vh !important;
     overflow: visible !important;
 }
 
 #app-content {
-    overflow-y: auto !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow: visible !important;
+}
+
+#app-content-wrapper {
+    height: auto !important;
+    overflow: visible !important;
 }
 </style>
 
@@ -79,6 +87,7 @@ export default {
 .pto-content {
     padding: 2rem;
     color: #333;
-    min-height: 400px;
+    min-height: 600px;
+    overflow: visible;
 }
 </style>

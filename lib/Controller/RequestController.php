@@ -151,6 +151,12 @@ class RequestController extends Controller {
             $request = $this->service->find($id);
 
             $requestUserId = $request->getUserId();
+            
+            // Prevent self-approval
+            if ($managerId === $requestUserId) {
+                return new DataResponse(['error' => 'You cannot approve your own request'], Http::STATUS_FORBIDDEN);
+            }
+            
             if (!$this->authService->isManagerOf($managerId, $requestUserId)
                 && !$this->authService->isAdmin($managerId)) {
                 return new DataResponse(['error' => 'You are not authorized to approve this request'], Http::STATUS_FORBIDDEN);
@@ -179,6 +185,12 @@ class RequestController extends Controller {
             $request = $this->service->find($id);
 
             $requestUserId = $request->getUserId();
+            
+            // Prevent self-denial
+            if ($managerId === $requestUserId) {
+                return new DataResponse(['error' => 'You cannot deny your own request. Use cancel instead.'], Http::STATUS_FORBIDDEN);
+            }
+            
             if (!$this->authService->isManagerOf($managerId, $requestUserId)
                 && !$this->authService->isAdmin($managerId)) {
                 return new DataResponse(['error' => 'You are not authorized to deny this request'], Http::STATUS_FORBIDDEN);
