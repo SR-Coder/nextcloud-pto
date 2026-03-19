@@ -24,6 +24,11 @@ A comprehensive PTO (Paid Time Off) and vacation tracking application for Nextcl
   - Manager relationships (set in Nextcloud Settings → Users)
   - Admin permissions via Nextcloud groups
   - Responsive UI matching Nextcloud design
+  - Calendar integration (approved PTO → Nextcloud Calendar)
+    - Automatic event creation on approval
+    - Admin-configurable calendar selection
+    - RFC 5545 compliant all-day events
+    - Compatible with Nextcloud 27 and 28+
 
 - **Security**
   - CSRF protection on all endpoints
@@ -39,10 +44,10 @@ A comprehensive PTO (Paid Time Off) and vacation tracking application for Nextcl
 
 ### 🚧 Planned Features
 
-- Calendar integration (approved PTO → Nextcloud Calendar)
 - Email/push notifications
 - Background jobs for automatic accrual
 - Reporting dashboard
+- Approval history view
 - Multi-language support (i18n)
 
 ## 📋 Requirements
@@ -259,8 +264,8 @@ MIT License - see [LICENSE](LICENSE) file
 
 ## ⚠️ Status
 
-**Current Version:** 0.1.4  
+**Current Version:** 0.4.3  
 **Status:** Beta - Ready for testing in production-like environments  
 **App Store:** Pending submission
 
-The core features are working and secure. Calendar integration, notifications, and background jobs are planned for the next release.
+The core features are working and secure, including calendar integration. Notifications and background jobs are planned for the next release.
