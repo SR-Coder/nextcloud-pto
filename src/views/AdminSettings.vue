@@ -351,32 +351,32 @@ export default {
 }
 
 .admin-settings h2 {
-    color: #0082c9;
+    color: var(--color-primary-element);
     margin-bottom: 2rem;
 }
 
 .section {
-    background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
+    background: var(--color-main-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-large);
     padding: 1.5rem;
     margin-bottom: 2rem;
 }
 
 .section h3 {
     margin-top: 0;
-    color: #333;
+    color: var(--color-main-text);
 }
 
 .section-desc {
-    color: #666;
+    color: var(--color-text-lighter);
     margin-top: -0.5rem;
     margin-bottom: 1.5rem;
 }
 
 .collapsible {
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
     margin-bottom: 1.5rem;
 }
 
@@ -384,17 +384,17 @@ export default {
     padding: 0.75rem 1rem;
     cursor: pointer;
     font-weight: 500;
-    background: #f8f8f8;
-    border-radius: 4px;
+    background: var(--color-background-hover);
+    border-radius: var(--border-radius);
 }
 
 .collapsible summary:hover {
-    background: #f0f0f0;
+    background: var(--color-background-dark);
 }
 
 .collapsible[open] summary {
-    border-bottom: 1px solid #e0e0e0;
-    border-radius: 4px 4px 0 0;
+    border-bottom: 1px solid var(--color-border);
+    border-radius: var(--border-radius) 4px 0 0;
 }
 
 .policy-form {
@@ -404,7 +404,7 @@ export default {
 .subsection h4 {
     margin-top: 1.5rem;
     margin-bottom: 1rem;
-    color: #555;
+    color: var(--color-main-text);
 }
 
 .form-row {
@@ -422,28 +422,28 @@ export default {
 .form-group label {
     font-weight: 500;
     margin-bottom: 0.25rem;
-    color: #555;
+    color: var(--color-main-text);
 }
 
 .form-group input,
 .form-group select {
     padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid var(--color-border-dark);
+    border-radius: var(--border-radius);
     font-size: 1rem;
 }
 
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #0082c9;
+    border-color: var(--color-primary-element);
 }
 
 .btn-primary,
 .btn-secondary {
     padding: 0.75rem 1.5rem;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.2s;
@@ -466,8 +466,8 @@ export default {
 
 .btn-secondary {
     background: #f5f5f5;
-    color: #333;
-    border: 1px solid #ddd;
+    color: var(--color-main-text);
+    border: 1px solid var(--color-border-dark);
 }
 
 .btn-secondary:hover {
@@ -475,24 +475,24 @@ export default {
 }
 
 .error {
-    color: #d32f2f;
+    color: var(--color-error);
     margin-top: 1rem;
     padding: 0.75rem;
     background: #ffebee;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
 }
 
 .success {
-    color: #388e3c;
+    color: var(--color-success);
     margin-top: 1rem;
     padding: 0.75rem;
     background: #e8f5e9;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
 }
 
 .loading,
 .placeholder {
-    color: #666;
+    color: var(--color-text-lighter);
     font-style: italic;
     padding: 1rem;
 }
@@ -503,8 +503,8 @@ export default {
 }
 
 .policy-card {
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
     padding: 1rem;
     background: #fafafa;
 }
@@ -518,7 +518,7 @@ export default {
 
 .policy-header h5 {
     margin: 0;
-    color: #333;
+    color: var(--color-main-text);
 }
 
 .policy-type {
@@ -530,7 +530,7 @@ export default {
 }
 
 .policy-details {
-    color: #555;
+    color: var(--color-main-text);
     margin-bottom: 1rem;
 }
 
@@ -553,25 +553,25 @@ export default {
 }
 
 .calendar-settings .form-help {
-    color: #666;
+    color: var(--color-text-lighter);
     font-size: 0.875rem;
     margin-top: 0.5rem;
     font-style: italic;
 }
 
 .success-message {
-    background: #d4edda;
-    color: #155724;
+    background: var(--color-success);
+    color: var(--color-primary-element-text);
     padding: 0.75rem 1rem;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     margin-top: 1rem;
 }
 
 .error-message {
-    background: #f8d7da;
-    color: #721c24;
+    background: var(--color-error);
+    color: var(--color-primary-element-text);
     padding: 0.75rem 1rem;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     margin-top: 1rem;
 }
 </style>

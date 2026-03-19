@@ -287,7 +287,7 @@ export default {
 }
 
 .request-form {
-    background: white;
+    background: var(--color-main-background);
     border: 1px solid var(--color-border, #e0e0e0);
     border-radius: var(--border-radius, 8px);
     padding: 2rem;
