@@ -1,134 +1,352 @@
-# Development Notes
+# Development Guide
 
-## Architecture Overview
+## Quick Start
 
-Based on Nextcloud app development best practices and requirements analysis.
+### Prerequisites
 
-### Tech Stack
+- Nextcloud 25, 26, or 27
+- PHP 8.0+
+- Node.js 16+ and npm
+- Docker (for local development)
 
-- **Backend**: PHP 8.0+ with Nextcloud OCP (OpenCloudPlatform) framework
-- **Frontend**: Vue.js 3 (Nextcloud standard)
-- **Database**: Nextcloud DB abstraction layer (supports MySQL, PostgreSQL, SQLite)
-- **APIs**: RESTful endpoints using Nextcloud routing
+### Local Development Setup
 
-### Database Schema (Planned)
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/SR-Coder/nextcloud-pto.git
+   cd nextcloud-pto
+   ```
 
-#### Tables
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-1. **pto_policies**
-   - id, name, type (unlimited|accrual|fixed), accrual_rate, max_balance, reset_date, created_at, updated_at
+3. **Start development environment:**
+   ```bash
+   # See LOCAL_DEV.md for Docker setup
+   docker compose up -d
+   ```
 
-2. **pto_balances**
-   - id, user_id, policy_id, balance, accrued_this_period, used_this_period, last_accrual_date
+4. **Build frontend (development):**
+   ```bash
+   npm run dev
+   ```
 
-3. **pto_requests**
-   - id, user_id, policy_id, start_date, end_date, hours, status (pending|approved|denied), notes, created_at
+5. **Access the app:**
+   - Nextcloud: http://localhost:8080
+   - Login: admin / admin
+   - Enable app: Settings → Apps → PTO Tracker
 
-4. **pto_approvals**
-   - id, request_id, manager_id, status, comments, acted_at
+### Frontend Development
 
-5. **pto_user_roles**
-   - id, user_id, role (admin|manager|employee), manager_id (for employee reporting structure)
+**Build Scripts:**
+```bash
+# Development build (with source maps)
+npm run dev
 
-### Key Components
+# Production build
+npm run build
 
-#### Backend (lib/)
+# Watch mode (rebuilds on change)
+npm run watch
+```
 
-- **Controllers**: Handle HTTP requests/responses
-  - `RequestController.php` - PTO request CRUD
-  - `PolicyController.php` - Policy management
-  - `ApprovalController.php` - Approval workflow
-  - `ReportController.php` - Analytics and reports
+**Build System:**
+- **Bundler:** Vite 5.x
+- **Framework:** Vue 3 (Composition API)
+- **Output:** IIFE format for Nextcloud compatibility
+- **Entry Points:**
+  - `src/main.js` → `js/pto-main.js` (main app)
+  - `src/admin-settings.js` → `js/pto-admin-settings.js` (admin panel)
 
-- **Services**: Business logic layer
-  - `PolicyService.php` - Policy calculations (accrual, balances)
-  - `RequestService.php` - Request validation and workflow
-  - `NotificationService.php` - Email notifications
-  - `CalendarService.php` - CalDAV integration
+**Adding a New Component:**
+1. Create component in `src/components/` or `src/views/`
+2. Import in relevant entry point
+3. Add route if needed (in `src/main.js`)
+4. Run `npm run build`
+5. Refresh Nextcloud (hard refresh: Cmd+Shift+R)
 
-- **Db**: Database entities and mappers
-  - Entity classes for each table
-  - Mapper classes for CRUD operations
+### Backend Development
 
-#### Frontend (src/)
+**Architecture:**
 
-- **Components**: Reusable UI elements
-  - `RequestForm.vue` - Submit PTO request
-  - `RequestList.vue` - View requests
-  - `ApprovalQueue.vue` - Manager approval interface
-  - `BalanceDisplay.vue` - Show PTO balances
-  - `PolicyConfig.vue` - Admin policy setup
+```
+lib/
+├── AppInfo/
+│   └── Application.php      # App bootstrap
+├── Controller/
+│   ├── RequestController.php
+│   ├── PolicyController.php
+│   └── BalanceController.php
+├── Db/
+│   ├── Request.php           # Entity
+│   └── RequestMapper.php     # Data access
+├── Service/
+│   ├── RequestService.php    # Business logic
+│   ├── AuthorizationService.php
+│   └── PolicyService.php
+├── Migration/
+│   └── Version*.php          # Database migrations
+└── Settings/
+    ├── AdminSection.php
+    └── AdminSettings.php
+```
 
-- **Views**: Page-level components
-  - `Dashboard.vue` - Main view
-  - `MyRequests.vue` - Employee view
-  - `TeamRequests.vue` - Manager view
-  - `AdminSettings.vue` - System admin view
+**Adding a New Endpoint:**
 
-### Integrations
+1. **Add route** in `appinfo/routes.php`:
+   ```php
+   ['name' => 'request#myAction', 'url' => '/api/v1/requests/custom', 'verb' => 'POST'],
+   ```
 
-#### Nextcloud Calendar (CalDAV)
+2. **Implement controller method:**
+   ```php
+   /**
+    * @NoAdminRequired
+    */
+   public function myAction(string $param): DataResponse {
+       // Validate input
+       if (empty($param)) {
+           return new DataResponse(['error' => 'Param required'], Http::STATUS_BAD_REQUEST);
+       }
+       
+       // Check authorization
+       if (!$this->authService->canDoThing($this->getUserId())) {
+           return new DataResponse(['error' => 'Unauthorized'], Http::STATUS_FORBIDDEN);
+       }
+       
+       // Business logic
+       $result = $this->service->doThing($param);
+       
+       return new DataResponse($result);
+   }
+   ```
 
-- Use `OCP\Calendar\ICalendar` and `CalDavBackend`
-- Create calendar events on approval
-- Allow users to select target calendar
-- Handle event deletion on request cancellation
+3. **Add service method** if needed:
+   ```php
+   public function doThing(string $param): array {
+       // Implement business logic
+       // Use mapper for database access
+       return $result;
+   }
+   ```
 
-#### Nextcloud Talk (Optional)
+4. **Test the endpoint:**
+   ```bash
+   curl -X POST http://localhost:8080/index.php/apps/pto/api/v1/requests/custom \
+     -H "requesttoken: YOUR_TOKEN" \
+     -H "Content-Type: application/json" \
+     -d '{"param": "value"}'
+   ```
 
-- Use `OCA\Talk` API to set user status
-- Auto-status: "On Vacation" during approved leave
-- Toggleable in user settings for privacy
+### Database Changes
 
-#### Email Notifications
+**Creating a Migration:**
 
-- Use `OCP\Mail\IMailer`
-- Notify on: request submission, approval, denial, upcoming leave
+1. **Create migration file:**
+   ```bash
+   # Name: Version{YYYYMMDD}Date{HHMMSS}.php
+   # Example: Version20260318Date143000.php
+   touch lib/Migration/Version20260318Date143000.php
+   ```
 
-### Background Jobs
+2. **Implement schema changes:**
+   ```php
+   public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
+       $schema = $schemaClosure();
+       
+       if (!$schema->hasTable('pto_new_table')) {
+           $table = $schema->createTable('pto_new_table');
+           $table->addColumn('id', Types::BIGINT, [
+               'autoincrement' => true,
+               'notnull' => true,
+           ]);
+           $table->setPrimaryKey(['id']);
+       }
+       
+       return $schema;
+   }
+   ```
 
-Use Nextcloud's background job system for:
-- Accrual calculations (daily/monthly)
-- Balance resets (annual)
-- Reminder notifications
+3. **Run migration:**
+   ```bash
+   php occ app:disable pto
+   php occ app:enable pto
+   ```
 
-### Development Workflow
+**Current Schema:**
 
-1. **Local Development**
-   - Clone repo to `nextcloud/apps/pto/`
-   - Enable dev mode in Nextcloud
-   - Use `npm run dev` for frontend hot reload
+- `pto_policies` - Policy definitions
+- `pto_balances` - User balance tracking
+- `pto_requests` - Time off requests
+- `pto_approvals` - Approval history
+- `pto_user_roles` - Reserved for future use
 
-2. **Testing**
-   - Unit tests: PHPUnit for backend
-   - Integration tests: Test against Nextcloud test instance
-   - Frontend tests: Jest + Vue Test Utils
+### Security Checklist
 
-3. **Deployment**
-   - Build: `npm run build`
-   - Package: Create tarball for App Store
-   - Submit: Via Nextcloud App Store developer portal
+**For Every New Endpoint:**
 
-### Security Considerations
+- [ ] Input validation (type, length, format, range)
+- [ ] Authorization check (owner/manager/admin)
+- [ ] CSRF protection (remove `@NoCSRFRequired` for writes)
+- [ ] SQL injection protection (use QueryBuilder, never raw SQL)
+- [ ] XSS protection (use template escaping)
+- [ ] Error handling (don't leak sensitive info)
 
-- Always use prepared statements (Nextcloud's QueryBuilder)
-- Validate all user input
-- Check permissions before sensitive operations
-- Use Nextcloud's CSRF protection
-- Follow PSR-12 coding standards
+**Example Validation Pattern:**
+```php
+// Validate required field
+if (empty($data['field'])) {
+    return new DataResponse(['error' => 'Field required'], 400);
+}
 
-### Gotchas to Avoid
+// Validate type/enum
+if (!in_array($data['type'], ['a', 'b', 'c'], true)) {
+    return new DataResponse(['error' => 'Invalid type'], 400);
+}
 
-- Don't hardcode paths, URLs, or roles
-- Test across Nextcloud versions (25, 26, 27)
-- Use background jobs for heavy operations
-- Support i18n from the start (l10n folder)
-- Document all public APIs
-- Provide migration scripts for schema changes
+// Validate length
+if (strlen($data['text']) > 1000) {
+    return new DataResponse(['error' => 'Text too long'], 400);
+}
+
+// Validate date
+try {
+    $date = new \DateTime($data['date']);
+} catch (\Exception $e) {
+    return new DataResponse(['error' => 'Invalid date'], 400);
+}
+```
+
+### Testing
+
+**Manual Testing Workflow:**
+
+1. Create a test policy (Settings → Admin → PTO Management)
+2. Assign policy to test user
+3. Submit a request (Dashboard → New Request)
+4. Approve as manager (Approvals tab)
+5. Verify request appears in history (My Requests)
+
+**Frontend Testing:**
+- Open browser console (F12)
+- Check for JavaScript errors
+- Verify API calls return expected data
+- Test form validation
+
+**Backend Testing:**
+- Check `nextcloud.log` for PHP errors
+- Monitor database queries
+- Test authorization (try as different users)
+
+### Deployment
+
+**Building for Production:**
+
+1. **Clean build:**
+   ```bash
+   rm -rf js/ css/
+   npm run build
+   ```
+
+2. **Verify build:**
+   ```bash
+   ls -lh js/
+   # Should see pto-main.js and pto-admin-settings.js
+   ```
+
+3. **Deploy to server:**
+   ```bash
+   # Example: rsync to production server
+   rsync -av --exclude 'node_modules' --exclude '.git' \
+     . user@server:/path/to/nextcloud/apps/pto/
+   ```
+
+4. **Update on server:**
+   ```bash
+   ssh user@server
+   cd /path/to/nextcloud
+   sudo -u www-data php occ app:disable pto
+   sudo -u www-data php occ app:enable pto
+   sudo -u www-data php occ maintenance:mode --off
+   ```
+
+### Code Style
+
+**PHP (PSR-12):**
+- `declare(strict_types=1);` at top of every file
+- Type declarations on all properties and returns
+- 4 spaces indentation
+- Opening braces on same line
+
+**Vue/JavaScript:**
+- Composition API preferred
+- 2 spaces indentation
+- Single quotes for strings
+- Semicolons required
+
+**Naming Conventions:**
+- Classes: `PascalCase`
+- Methods: `camelCase`
+- Constants: `UPPER_SNAKE_CASE`
+- Database tables: `snake_case` (without `oc_` prefix)
+
+### Common Issues
+
+**1. "412 Precondition Failed"**
+- **Cause:** Missing CSRF token
+- **Fix:** Ensure `src/api.js` is sending `requesttoken` header
+
+**2. "404 Not Found" on API**
+- **Cause:** Route not registered or app not enabled
+- **Fix:** Check `appinfo/routes.php`, run `occ app:enable pto`
+
+**3. "Blank page / white screen"**
+- **Cause:** JavaScript error or cache issue
+- **Fix:** Hard refresh (Cmd+Shift+R), check browser console
+
+**4. "Changes not appearing"**
+- **Cause:** Nextcloud asset caching
+- **Fix:** Bump version in `appinfo/info.xml`, rebuild frontend
+
+**5. "Table not found"**
+- **Cause:** Migration not run
+- **Fix:** `occ app:disable pto && occ app:enable pto`
+
+### Useful Commands
+
+```bash
+# Enable/disable app
+php occ app:enable pto
+php occ app:disable pto
+
+# Check app status
+php occ app:list | grep pto
+
+# View logs
+tail -f /path/to/nextcloud/data/nextcloud.log
+
+# Clear cache
+php occ maintenance:repair --include-expensive
+
+# List routes
+php occ route:list | grep pto
+```
 
 ### Resources
 
-- [Nextcloud Developer Manual](https://docs.nextcloud.com/server/latest/developer_manual/)
-- [Nextcloud App Tutorial](https://docs.nextcloud.com/server/latest/developer_manual/app_development/tutorial.html)
-- [OCP API Reference](https://docs.nextcloud.com/server/latest/developer_manual/basics/classloader.html)
-- [App Store Guidelines](https://nextcloudappstore.readthedocs.io/en/latest/)
+- [Nextcloud Developer Docs](https://docs.nextcloud.com/server/latest/developer_manual/)
+- [Vue 3 Documentation](https://vuejs.org/)
+- [Vite Documentation](https://vitejs.dev/)
+- [PSR-12 Coding Standard](https://www.php-fig.org/psr/psr-12/)
+
+### Getting Help
+
+- **Issues:** https://github.com/SR-Coder/nextcloud-pto/issues
+- **Nextcloud Community:** https://help.nextcloud.com/
+- **Developer Chat:** https://cloud.nextcloud.com/call/nvcuafrx
+
+---
+
+**Happy coding!** 🚀
