@@ -22,10 +22,8 @@ export async function apiRequest(endpoint, options = {}) {
         ...options.headers
     }
 
-    // Add CSRF token for write operations
-    if (options.method && options.method !== 'GET' && options.method !== 'HEAD') {
-        headers['requesttoken'] = getRequestToken()
-    }
+    // Add CSRF token for ALL requests (Nextcloud requires it even for GET via AJAX)
+    headers['requesttoken'] = getRequestToken()
 
     const response = await fetch(url, {
         ...options,
