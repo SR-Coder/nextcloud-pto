@@ -20,6 +20,7 @@ class RequestService {
     private BalanceService $balanceService;
     private AuthorizationService $authService;
     private NotificationService $notificationService;
+    private CalendarService $calendarService;
 
     public function __construct(
         RequestMapper $requestMapper,
@@ -27,7 +28,8 @@ class RequestService {
         UserRoleMapper $userRoleMapper,
         BalanceService $balanceService,
         AuthorizationService $authService,
-        NotificationService $notificationService
+        NotificationService $notificationService,
+        CalendarService $calendarService
     ) {
         $this->requestMapper = $requestMapper;
         $this->approvalMapper = $approvalMapper;
@@ -35,6 +37,7 @@ class RequestService {
         $this->balanceService = $balanceService;
         $this->authService = $authService;
         $this->notificationService = $notificationService;
+        $this->calendarService = $calendarService;
     }
 
     /**
@@ -57,20 +60,23 @@ class RequestService {
      * @return Request[]
      */
     public function findPendingForManager(string $managerId): array {
-        // If admin, return all pending requests
+        // Get all pending requests (admin) or for managed users
         if ($this->authService->isAdmin($managerId)) {
-            return $this->requestMapper->findPending();
+            $requests = $this->requestMapper->findPending();
+        } else {
+            $managedUserIds = $this->authService->getManagedUsers($managerId);
+            
+            if (empty($managedUserIds)) {
+                return [];
+            }
+            
+            $requests = $this->requestMapper->findByUsers($managedUserIds, 'pending');
         }
         
-        // Get all users this manager manages
-        $managedUserIds = $this->authService->getManagedUsers($managerId);
-        
-        if (empty($managedUserIds)) {
-            return [];
-        }
-        
-        // Get pending requests for those users
-        return $this->requestMapper->findByUsers($managedUserIds, 'pending');
+        // Filter out the manager's own requests - can't approve your own PTO
+        return array_values(array_filter($requests, function($request) use ($managerId) {
+            return $request->getUserId() !== $managerId;
+        }));
     }
 
     /**
@@ -162,7 +168,22 @@ class RequestService {
         // Send notification to requester
         $this->notificationService->notifyRequestApproved($request, $comments);
 
-        // TODO: Create calendar event
+        // Create calendar event
+        try {
+            $startDate = new DateTime($request->getStartDate());
+            $endDate = new DateTime($request->getEndDate());
+            $this->calendarService->createPTOEvent(
+                $request->getUserId(),
+                $request->getLeaveType(),
+                $startDate,
+                $endDate,
+                $request->getHours(),
+                $request->getNotes()
+            );
+        } catch (\Exception $e) {
+            // Log but don't fail the approval if calendar creation fails
+            // The request is already approved at this point
+        }
 
         return $request;
     }

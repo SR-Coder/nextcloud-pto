@@ -21,17 +21,7 @@
                                 {{ policy.policyName }}{{ policy.policyType !== 'unlimited' ? ` (${policy.availableBalance} hrs)` : '' }}
                             </option>
                         </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="leaveType">Leave Type *</label>
-                        <select id="leaveType" v-model="form.leaveType" required>
-                            <option value="">Select type...</option>
-                            <option value="vacation">Vacation</option>
-                            <option value="sick">Sick Leave</option>
-                            <option value="personal">Personal</option>
-                            <option value="other">Other</option>
-                        </select>
+                        <p class="form-help">Each policy represents a type of time off (vacation, sick time, etc.)</p>
                     </div>
                 </div>
                 
@@ -133,7 +123,6 @@ export default {
             success: false,
             form: {
                 policyId: '',
-                leaveType: '',
                 startDate: '',
                 endDate: '',
                 totalHours: 0,
@@ -220,7 +209,7 @@ export default {
             this.success = false
             
             try {
-                if (!this.form.policyId || !this.form.leaveType || !this.form.startDate || !this.form.endDate) {
+                if (!this.form.policyId || !this.form.startDate || !this.form.endDate) {
                     throw new Error('Please fill in all required fields')
                 }
                 
@@ -228,9 +217,12 @@ export default {
                     throw new Error('Total hours must be greater than 0')
                 }
                 
+                // Use policy name as the leave type (backend still expects it)
+                const leaveType = this.selectedPolicy?.policyName || 'pto'
+                
                 await apiPost('requests', {
                     policyId: parseInt(this.form.policyId),
-                    leaveType: this.form.leaveType,
+                    leaveType: leaveType,
                     startDate: this.form.startDate,
                     endDate: this.form.endDate,
                     hours: this.form.totalHours,
@@ -255,7 +247,6 @@ export default {
         resetForm() {
             this.form = {
                 policyId: '',
-                leaveType: '',
                 startDate: '',
                 endDate: '',
                 totalHours: 0,
@@ -336,6 +327,7 @@ export default {
     border-radius: var(--border-radius, 4px);
     font-size: 1rem;
     font-family: inherit;
+    min-height: 44px;
     box-sizing: border-box;
 }
 
@@ -354,6 +346,13 @@ export default {
     color: var(--color-text-lighter, #666);
     font-size: 0.875rem;
     margin-top: 0.25rem;
+}
+
+.form-help {
+    color: var(--color-text-lighter, #666);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    font-style: italic;
 }
 
 .balance-info {

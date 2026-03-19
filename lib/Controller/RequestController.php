@@ -83,14 +83,8 @@ class RequestController extends Controller {
         float $hours,
         ?string $notes = null
     ): DataResponse {
-        // Validate leave type
-        $validLeaveTypes = ['vacation', 'sick', 'personal', 'other'];
-        if (!in_array($leaveType, $validLeaveTypes, true)) {
-            return new DataResponse([
-                'error' => 'Invalid leave type. Must be one of: ' . implode(', ', $validLeaveTypes)
-            ], Http::STATUS_BAD_REQUEST);
-        }
-
+        // Leave type is now the policy name (no validation needed)
+        
         // Validate hours
         if ($hours <= 0) {
             return new DataResponse(['error' => 'Hours must be greater than 0'], Http::STATUS_BAD_REQUEST);
