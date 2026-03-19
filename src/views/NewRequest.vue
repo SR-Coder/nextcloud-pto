@@ -383,10 +383,18 @@ export default {
 }
 
 .form-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 2rem;
+    display: flex !important;
+    gap: 1rem !important;
+    justify-content: flex-end !important;
+    padding: 1rem 2rem !important;
+    background: white !important;
+    border-top: 2px solid #e0e0e0 !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    left: 0 !important;
+    z-index: 10000 !important;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1) !important;
 }
 
 .btn-primary,
@@ -442,5 +450,20 @@ export default {
 .success-message a {
     color: var(--color-success, #388e3c);
     text-decoration: underline;
+}
+</style>
+
+<style>
+/* Non-scoped style for fixed positioning (must override Nextcloud's layout) */
+.form-actions {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 10000 !important;
+    background: white !important;
+    border-top: 2px solid #e0e0e0 !important;
+    padding: 1rem 2rem !important;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1) !important;
 }
 </style>

@@ -22,20 +22,38 @@ export default {
 
 <style>
 /* Global override for Nextcloud's app container */
-.app-pto {
+body {
+    overflow-y: auto !important;
+}
+
+#content-vue {
     height: auto !important;
-    min-height: 100vh !important;
+    overflow: visible !important;
+}
+
+#app-content-vue {
+    height: auto !important;
+    min-height: calc(100vh - 50px) !important;
     overflow: visible !important;
 }
 
 #app-content {
     height: auto !important;
+    max-height: none !important;
     min-height: 100vh !important;
-    overflow: visible !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
 }
 
 #app-content-wrapper {
     height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+.app-pto {
+    height: auto !important;
+    min-height: 100vh !important;
     overflow: visible !important;
 }
 </style>
