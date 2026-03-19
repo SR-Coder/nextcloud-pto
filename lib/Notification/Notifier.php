@@ -34,15 +34,22 @@ class Notifier implements INotifier {
 
         $l = $this->l10nFactory->get(Application::APP_ID, $languageCode);
 
-        switch ($notification->getSubject()) {
-            case 'request_submitted':
-                return $this->prepareRequestSubmitted($notification, $l);
-            case 'request_approved':
-                return $this->prepareRequestApproved($notification, $l);
-            case 'request_denied':
-                return $this->prepareRequestDenied($notification, $l);
-            default:
-                throw new \InvalidArgumentException('Unknown subject');
+        try {
+            switch ($notification->getSubject()) {
+                case 'request_submitted':
+                    return $this->prepareRequestSubmitted($notification, $l);
+                case 'request_approved':
+                    return $this->prepareRequestApproved($notification, $l);
+                case 'request_denied':
+                    return $this->prepareRequestDenied($notification, $l);
+                default:
+                    error_log("[PTO DEBUG] Unknown notification subject: " . $notification->getSubject());
+                    throw new \InvalidArgumentException('Unknown subject');
+            }
+        } catch (\Exception $e) {
+            error_log("[PTO DEBUG] Error in Notifier::prepare(): " . $e->getMessage());
+            error_log("[PTO DEBUG] Stack trace: " . $e->getTraceAsString());
+            throw $e;
         }
     }
 
@@ -69,32 +76,8 @@ class Notifier implements INotifier {
             Application::APP_ID . '.page.index'
         ) . '#/approvals');
 
-        // Add approve/deny actions
-        $notification->addAction($notification->createAction()
-            ->setLabel('approve')
-            ->setParsedLabel($l->t('Approve'))
-            ->setLink(
-                $this->urlGenerator->linkToOCSRouteAbsolute(
-                    Application::APP_ID . '.request.approve',
-                    ['id' => $params['requestId']]
-                ),
-                'POST'
-            )
-            ->setPrimary(true)
-        );
-
-        $notification->addAction($notification->createAction()
-            ->setLabel('deny')
-            ->setParsedLabel($l->t('Deny'))
-            ->setLink(
-                $this->urlGenerator->linkToOCSRouteAbsolute(
-                    Application::APP_ID . '.request.deny',
-                    ['id' => $params['requestId']]
-                ),
-                'POST'
-            )
-            ->setPrimary(false)
-        );
+        // TODO: Add approve/deny action buttons once we set up OCS routes
+        // For now, users must click through to the approval queue
 
         return $notification;
     }
