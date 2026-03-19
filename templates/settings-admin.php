@@ -17,4 +17,10 @@ style('pto', 'pto-admin-settings');
         <p class="settings-hint"><?php p($l->t('Assign managers who can approve PTO requests')); ?></p>
         <div id="pto-manager-assignment"></div>
     </div>
+
+    <div class="pto-admin-panel">
+        <h3>📅 <?php p($l->t('Calendar Integration')); ?></h3>
+        <p class="settings-hint"><?php p($l->t('Automatically create calendar events when PTO is approved')); ?></p>
+        <div id="pto-calendar-settings"></div>
+    </div>
 </div>
