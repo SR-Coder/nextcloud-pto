@@ -121,7 +121,7 @@ export default {
             
             try {
                 const data = await apiGet('requests/pending')
-                this.pendingRequests = data.requests || []
+                this.pendingRequests = Array.isArray(data) ? data : (data.requests || [])
             } catch (err) {
                 console.error('Load pending requests error:', err)
                 this.error = err.message
