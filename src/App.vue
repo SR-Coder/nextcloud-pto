@@ -21,40 +21,15 @@ export default {
 </script>
 
 <style>
-/* Global override for Nextcloud's app container */
-body {
-    overflow-y: auto !important;
-}
-
-#content-vue {
-    height: auto !important;
-    overflow: visible !important;
-}
-
-#app-content-vue {
-    height: auto !important;
-    min-height: calc(100vh - 50px) !important;
-    overflow: visible !important;
-}
-
-#app-content {
-    height: auto !important;
-    max-height: none !important;
-    min-height: 100vh !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-}
-
-#app-content-wrapper {
-    height: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
-}
-
-.app-pto {
+/* Override Nextcloud's fixed body height to allow natural scrolling */
+body,
+html {
     height: auto !important;
     min-height: 100vh !important;
-    overflow: visible !important;
+}
+
+#content {
+    height: auto !important;
 }
 </style>
 
@@ -105,7 +80,6 @@ body {
 .pto-content {
     padding: 2rem;
     color: #333;
-    min-height: 600px;
-    overflow: visible;
+    /* No height or overflow constraints - let body scroll per Nextcloud docs */
 }
 </style>
