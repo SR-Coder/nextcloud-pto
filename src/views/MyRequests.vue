@@ -148,7 +148,7 @@ export default {
 </script>
 
 <style scoped>
-.my-requests { max-width: 1200px; }
+.my-requests { width: 100%; padding: 20px; }
 .my-requests h2 { color: var(--color-primary-element, #0082c9); margin-bottom: 1.5rem; }
 
 .filters { margin-bottom: 1.5rem; }

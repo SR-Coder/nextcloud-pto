@@ -1,28 +1,38 @@
 <template>
-    <li>
-        <router-link to="/">
-            <span class="app-navigation-entry-icon icon-home"></span>
-            Dashboard
-        </router-link>
-    </li>
-    <li>
-        <router-link to="/requests">
-            <span class="app-navigation-entry-icon icon-files"></span>
-            My Requests
-        </router-link>
-    </li>
-    <li>
-        <router-link to="/requests/new">
-            <span class="app-navigation-entry-icon icon-add"></span>
-            New Request
-        </router-link>
-    </li>
-    <li>
-        <router-link to="/approvals">
-            <span class="app-navigation-entry-icon icon-checkmark"></span>
-            Approvals
-        </router-link>
-    </li>
+    <ul>
+        <li>
+            <router-link to="/" class="app-navigation-entry">
+                <div class="app-navigation-entry__icon">
+                    <span class="icon icon-home"></span>
+                </div>
+                <div class="app-navigation-entry__name">Dashboard</div>
+            </router-link>
+        </li>
+        <li>
+            <router-link to="/requests" class="app-navigation-entry">
+                <div class="app-navigation-entry__icon">
+                    <span class="icon icon-files"></span>
+                </div>
+                <div class="app-navigation-entry__name">My Requests</div>
+            </router-link>
+        </li>
+        <li>
+            <router-link to="/requests/new" class="app-navigation-entry">
+                <div class="app-navigation-entry__icon">
+                    <span class="icon icon-add"></span>
+                </div>
+                <div class="app-navigation-entry__name">New Request</div>
+            </router-link>
+        </li>
+        <li>
+            <router-link to="/approvals" class="app-navigation-entry">
+                <div class="app-navigation-entry__icon">
+                    <span class="icon icon-checkmark"></span>
+                </div>
+                <div class="app-navigation-entry__name">Approvals</div>
+            </router-link>
+        </li>
+    </ul>
 </template>
 
 <script>

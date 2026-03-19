@@ -257,7 +257,8 @@ export default {
 
 <style scoped>
 .admin-settings {
-    max-width: 1200px;
+    width: 100%;
+    padding: 20px;
 }
 
 .admin-settings h2 {

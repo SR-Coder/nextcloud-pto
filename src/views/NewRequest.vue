@@ -272,7 +272,8 @@ export default {
 
 <style scoped>
 .new-request {
-    max-width: 800px;
+    width: 100%;
+    padding: 20px;
 }
 
 .new-request h2 {

@@ -1,7 +1,6 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import App from './App.vue'
-import Navigation from './components/Navigation.vue'
 import Dashboard from './views/Dashboard.vue'
 import MyRequests from './views/MyRequests.vue'
 import NewRequest from './views/NewRequest.vue'
@@ -20,23 +19,15 @@ const router = createRouter({
 })
 
 function initApp() {
-    const navMount = document.getElementById('app-navigation-vue')
-    const contentMount = document.getElementById('app-content-vue')
+    const app = createApp(App)
+    app.use(router)
     
-    if (!navMount || !contentMount) {
-        console.error('[PTO] Mount points not found!')
-        return
+    const mountPoint = document.getElementById('content')
+    if (mountPoint) {
+        app.mount('#content')
+    } else {
+        console.error('[PTO] Mount point #content not found!')
     }
-    
-    // Mount navigation
-    const navApp = createApp(Navigation)
-    navApp.use(router)
-    navApp.mount('#app-navigation-vue')
-    
-    // Mount main content
-    const contentApp = createApp(App)
-    contentApp.use(router)
-    contentApp.mount('#app-content-vue')
 }
 
 if (document.readyState === 'loading') {
