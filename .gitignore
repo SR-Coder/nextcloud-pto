@@ -43,3 +43,8 @@ notes-*.md
 agent-*.md
 workspace-*.md
 brainstorm-*.md
+
+# Code signing files (NEVER commit private key)
+pto.key
+pto.csr
+pto.crt
