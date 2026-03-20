@@ -64,6 +64,15 @@ class BalanceService {
     }
 
     /**
+     * Delete a balance (remove policy from user)
+     * @throws DoesNotExistException
+     */
+    public function deleteBalance(string $userId, int $policyId): void {
+        $balance = $this->getBalance($userId, $policyId);
+        $this->balanceMapper->delete($balance);
+    }
+
+    /**
      * Process accrual for a specific user/policy
      * @throws DoesNotExistException
      */

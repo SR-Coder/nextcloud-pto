@@ -153,9 +153,7 @@ export default {
             
             try {
                 const data = await apiGet('requests/history')
-                console.log('History API response:', data)
                 this.historicalRequests = Array.isArray(data) ? data : (data.requests || [])
-                console.log('Loaded history count:', this.historicalRequests.length)
             } catch (err) {
                 console.error('Load history error:', err)
                 // Don't show error - history is optional

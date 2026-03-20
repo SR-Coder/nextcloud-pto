@@ -4,6 +4,80 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.5.6 - 2026-03-19
+
+### Fixed
+- **Policy Assignment Fully Working**
+  - Routes file properly deployed (removePolicy route was missing)
+  - Controller method deployed (removePolicy() was missing)
+  - Service method deployed (deleteBalance() was missing)
+  - Removed debug console.log statements
+
+### Changed
+- Admins can now assign/remove policies from users
+- Save button persists changes correctly
+- Success messages display after save
+- All backend methods properly deployed
+
+### Technical
+- Added POST /api/v1/balances/remove endpoint
+- BalanceController::removePolicy() - admin-only
+- BalanceService::deleteBalance() - deletes balance record
+- PolicyAssignment component processes pending removals
+
+## 0.5.5 - 2026-03-19
+
+### Added
+- **Access Control** - Users without assigned policies cannot access PTO app
+  - Shows "PTO Tracker Not Available" message for unauthorized users
+  - Admins always have access (even without policies)
+  - Prevents contractors/external users from accessing the system
+
+### Fixed
+- PolicyAssignment user dropdown showing "()"
+  - API returns { users: [...] } but component expected array
+  - Now handles both data.users and direct array format
+
+### Changed
+- App.vue checks if user has any balances OR is admin
+- If no access → shows message to contact administrator
+- If has access → shows normal PTO interface
+
+## 0.5.4 - 2026-03-19
+
+### Added
+- **Policy Assignment UI for Admins**
+  - New component: PolicyAssignment.vue
+  - Per-user policy assignment interface
+  - Select user from dropdown
+  - Shows all available policies with checkboxes
+  - Assign/unassign policies
+  - Set initial balance when assigning
+  - Shows current balance for assigned policies
+
+### Changed
+- Added PolicyAssignment component to AdminSettings
+- Updated package.json with build:main and build:admin scripts
+- Build now compiles both main app and admin panel
+
+### Technical
+- Updated balances endpoint to accept optional userId parameter
+- Admins can query any user's balances via GET /api/v1/balances?userId=xxx
+- Non-admins still only see their own balances
+
+## 0.5.3 - 2026-03-19
+
+### Added
+- **Permission-Based Navigation** - Approvals tab only visible to managers/admins
+  - Navigation component checks user permissions
+  - Uses GET /api/v1/users/managers endpoint for canApprove flag
+  - Non-managers see: Dashboard, My Requests, New Request
+  - Managers see: Dashboard, My Requests, New Request, Approvals
+
+### Fixed
+- Removed 2 debug console.log statements from ApprovalQueue.vue
+- Navigation now uses correct API endpoint for canApprove check
+
 ## 0.5.2 - 2026-03-19
 
 ### Added

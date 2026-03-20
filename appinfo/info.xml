@@ -5,20 +5,25 @@
     <name>PTO Tracker</name>
     <summary>Comprehensive PTO and vacation tracking for teams</summary>
     <description><![CDATA[
-Track and manage paid time off (PTO) with flexible policies, approval workflows, and calendar integration.
+Track and manage paid time off (PTO) with flexible policies, approval workflows, notifications, and calendar integration.
 
 Features:
-- Flexible PTO policies (unlimited, accrual, fixed annual)
-- Request and approval workflow
+- Flexible PTO policies (unlimited, accrual-based, fixed annual)
+- Request submission and manager approval workflow
+- Full notification system (in-app bell notifications for all events)
+- Automatic calendar event creation when PTO is approved
+- Admin UI for policy assignment per user
+- Access control (users without policies can't access app)
+- Approval history view for managers
+- Permission-based navigation (approvals tab only for managers)
+- Dark mode compatible
 - Multiple leave types (vacation, sick, personal)
-- Calendar integration
-- Reporting and analytics
-- Manager delegation
-- Email notifications
+- Request cancellation before approval
+- Secure (SQL injection, XSS, CSRF protection)
     ]]></description>
-    <version>0.5.0</version>
+    <version>0.5.6</version>
     <licence>MIT</licence>
-    <author mail="jim@sparerecords.com" homepage="https://github.com/SR-Coder">JCR Labs</author>
+    <author mail="jim@sparerecords.com" homepage="https://sparerecords.com">JCR Labs</author>
     <namespace>PTO</namespace>
     <category>organization</category>
     <bugs>https://github.com/SR-Coder/nextcloud-pto/issues</bugs>
@@ -29,7 +34,7 @@ Features:
     <screenshot>https://raw.githubusercontent.com/SR-Coder/nextcloud-pto/main/screenshots/04-approvals.png</screenshot>
     <screenshot>https://raw.githubusercontent.com/SR-Coder/nextcloud-pto/main/screenshots/05-admin-settings.png</screenshot>
     <dependencies>
-        <nextcloud min-version="25" max-version="27"/>
+        <nextcloud min-version="25" max-version="28"/>
         <php min-version="8.0"/>
     </dependencies>
     <navigations>

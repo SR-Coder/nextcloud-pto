@@ -35,13 +35,22 @@ class BalanceController extends Controller {
     }
 
     /**
-     * Get current user's balances only
+     * Get current user's balances only (or any user if admin with userId param)
      * @NoAdminRequired
      * @NoCSRFRequired
      */
-    public function index(): DataResponse {
-        $userId = $this->getUserId();
-        $balances = $this->service->getUserBalancesWithPolicies($userId);
+    public function index(?string $userId = null): DataResponse {
+        // If userId is provided, check if current user is admin
+        if ($userId !== null) {
+            if (!$this->authService->isAdmin($this->getUserId())) {
+                return new DataResponse(['error' => 'Only administrators can view other users balances'], Http::STATUS_FORBIDDEN);
+            }
+            $targetUserId = $userId;
+        } else {
+            $targetUserId = $this->getUserId();
+        }
+        
+        $balances = $this->service->getUserBalancesWithPolicies($targetUserId);
 
         return new DataResponse(['balances' => $balances]);
     }
@@ -89,6 +98,23 @@ class BalanceController extends Controller {
 
             $balance = $this->service->createBalance($userId, $policyId, $initialBalance);
             return new DataResponse($balance, Http::STATUS_CREATED);
+        } catch (\Exception $e) {
+            return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Remove a policy from a user (delete balance) - admin only
+     * @NoAdminRequired
+     */
+    public function removePolicy(string $userId, int $policyId): DataResponse {
+        try {
+            if (!$this->authService->isAdmin($this->getUserId())) {
+                return new DataResponse(['error' => 'Only administrators can remove policies'], Http::STATUS_FORBIDDEN);
+            }
+
+            $this->service->deleteBalance($userId, $policyId);
+            return new DataResponse(['success' => true]);
         } catch (\Exception $e) {
             return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
         }

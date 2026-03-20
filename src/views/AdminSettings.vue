@@ -155,12 +155,22 @@
                 <div v-if="calendarSuccess" class="success-message">{{ calendarSuccess }}</div>
             </div>
         </div>
+        
+        <!-- Policy Assignment -->
+        <div class="section">
+            <PolicyAssignment />
+        </div>
     </div>
 </template>
 
 <script>
+import PolicyAssignment from '../components/PolicyAssignment.vue'
+
 export default {
     name: 'AdminSettings',
+    components: {
+        PolicyAssignment
+    },
     data() {
         return {
             policies: [],

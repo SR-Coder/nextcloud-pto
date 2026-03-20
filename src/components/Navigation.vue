@@ -24,7 +24,7 @@
                 <div class="app-navigation-entry__name">New Request</div>
             </router-link>
         </li>
-        <li>
+        <li v-if="canApprove">
             <router-link to="/approvals" class="app-navigation-entry">
                 <div class="app-navigation-entry__icon">
                     <span class="icon icon-checkmark"></span>
@@ -36,7 +36,32 @@
 </template>
 
 <script>
+import { apiGet } from '../api'
+
 export default {
     name: 'Navigation',
+    
+    data() {
+        return {
+            canApprove: false,
+        }
+    },
+    
+    mounted() {
+        this.checkPermissions()
+    },
+    
+    methods: {
+        async checkPermissions() {
+            try {
+                const data = await apiGet('users/managers')
+                const currentUser = data.users.find(u => u.id === OC.getCurrentUser().uid)
+                this.canApprove = currentUser?.canApprove || false
+            } catch (error) {
+                // If we can't check, hide the approvals tab
+                this.canApprove = false
+            }
+        }
+    }
 }
 </script>

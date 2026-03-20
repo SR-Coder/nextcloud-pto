@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import PolicyManagement from './components/PolicyManagement.vue'
 import ManagerAssignment from './components/ManagerAssignment.vue'
 import CalendarSettings from './components/CalendarSettings.vue'
+import PolicyAssignment from './components/PolicyAssignment.vue'
 
 // Mount Policy Management
 const policyEl = document.getElementById('pto-policy-management')
@@ -22,4 +23,11 @@ const calendarEl = document.getElementById('pto-calendar-settings')
 if (calendarEl) {
     const calendarApp = createApp(CalendarSettings)
     calendarApp.mount(calendarEl)
+}
+
+// Mount Policy Assignment
+const policyAssignmentEl = document.getElementById('pto-policy-assignment')
+if (policyAssignmentEl) {
+    const policyAssignmentApp = createApp(PolicyAssignment)
+    policyAssignmentApp.mount(policyAssignmentEl)
 }
