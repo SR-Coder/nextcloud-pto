@@ -240,7 +240,7 @@ export default {
                 this.successMessage = 'Policy assignments saved successfully'
                 await this.loadUserPolicies()
             } catch (error) {
-                this.errorMessage = error.response?.data?.error || 'Failed to save changes'
+                this.errorMessage = error.response?.data?.error || error.message || 'Failed to save changes'
             } finally {
                 this.saving = false
             }
