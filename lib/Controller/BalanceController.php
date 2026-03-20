@@ -52,7 +52,7 @@ class BalanceController extends Controller {
         
         $balances = $this->service->getUserBalancesWithPolicies($targetUserId);
 
-        return new DataResponse($balances);
+        return new DataResponse(['balances' => $balances]);
     }
 
     /**

@@ -45,7 +45,8 @@ export default {
         async checkAccess() {
             try {
                 // Check if user has any policies assigned
-                const balances = await apiGet('balances')
+                const data = await apiGet('balances')
+                const balances = data.balances || data
                 
                 // User has access if they have at least one policy OR are an admin
                 if (Array.isArray(balances) && balances.length > 0) {
