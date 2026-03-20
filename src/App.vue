@@ -52,10 +52,10 @@ export default {
                 if (Array.isArray(balances) && balances.length > 0) {
                     this.hasAccess = true
                 } else {
-                    // Check if admin
-                    const data = await apiGet('users/managers')
-                    const currentUser = data.users.find(u => u.id === OC.getCurrentUser().uid)
-                    this.hasAccess = currentUser?.isAdmin || false
+                    // Check if admin (canApprove means user is admin or manager)
+                    const userData = await apiGet('users/managers')
+                    const currentUser = userData.users.find(u => u.id === OC.getCurrentUser().uid)
+                    this.hasAccess = currentUser?.canApprove || false
                 }
             } catch (error) {
                 // On error, show access denied (safer than granting access)
