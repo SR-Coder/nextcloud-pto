@@ -342,6 +342,22 @@ Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 MIT License - see [LICENSE](LICENSE) file
 
+## 💝 Support Development
+
+[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub-ea4aaa)](https://github.com/sponsors/SR-Coder)
+
+This app is **free and open source**. If it saves your organization time and money, consider supporting continued development:
+
+**[❤️ Become a Sponsor](https://github.com/sponsors/SR-Coder)**
+
+Your sponsorship helps:
+- 🐛 Fix bugs faster
+- ✨ Add new features
+- 📚 Improve documentation
+- 🔒 Maintain security updates
+
+Sponsors get priority support and help shape the roadmap.
+
 ## 🙏 Credits
 
 - **Developed by:** JCR Labs
