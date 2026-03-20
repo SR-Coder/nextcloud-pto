@@ -42,6 +42,8 @@ class Notifier implements INotifier {
                     return $this->prepareRequestApproved($notification, $l);
                 case 'request_denied':
                     return $this->prepareRequestDenied($notification, $l);
+                case 'request_cancelled':
+                    return $this->prepareRequestCancelled($notification, $l);
                 default:
                     error_log("[PTO DEBUG] Unknown notification subject: " . $notification->getSubject());
                     throw new \InvalidArgumentException('Unknown subject');
@@ -138,6 +140,32 @@ class Notifier implements INotifier {
         $notification->setLink($this->urlGenerator->linkToRouteAbsolute(
             Application::APP_ID . '.page.index'
         ) . '#/requests');
+
+        return $notification;
+    }
+
+    private function prepareRequestCancelled(INotification $notification, $l): INotification {
+        $params = $notification->getSubjectParameters();
+        
+        $notification->setParsedSubject(
+            $l->t('%s cancelled a PTO request', [$params['requester']])
+        );
+        
+        $message = $l->t('%s hours from %s to %s', [
+            $params['hours'],
+            $params['startDate'],
+            $params['endDate']
+        ]);
+
+        $notification->setParsedMessage($message);
+
+        $notification->setIcon($this->urlGenerator->getAbsoluteURL(
+            $this->urlGenerator->imagePath(Application::APP_ID, 'app.svg')
+        ));
+
+        $notification->setLink($this->urlGenerator->linkToRouteAbsolute(
+            Application::APP_ID . '.page.index'
+        ) . '#/approvals');
 
         return $notification;
     }

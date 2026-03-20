@@ -287,6 +287,9 @@ class RequestService {
             // TODO: Delete calendar event
         }
 
+        // Notify manager(s) that request was cancelled
+        $this->notificationService->notifyRequestCancelled($request);
+
         return $request;
     }
 
