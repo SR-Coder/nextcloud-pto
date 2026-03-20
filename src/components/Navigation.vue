@@ -54,8 +54,8 @@ export default {
     methods: {
         async checkPermissions() {
             try {
-                const users = await apiGet('users')
-                const currentUser = users.find(u => u.id === OC.getCurrentUser().uid)
+                const data = await apiGet('users/managers')
+                const currentUser = data.users.find(u => u.id === OC.getCurrentUser().uid)
                 this.canApprove = currentUser?.canApprove || false
             } catch (error) {
                 // If we can't check, hide the approvals tab
