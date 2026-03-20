@@ -23,4 +23,10 @@ style('pto', 'pto-admin-settings');
         <p class="settings-hint"><?php p($l->t('Automatically create calendar events when PTO is approved')); ?></p>
         <div id="pto-calendar-settings"></div>
     </div>
+
+    <div class="pto-admin-panel">
+        <h3><?php p($l->t('User Policy Assignment')); ?></h3>
+        <p class="settings-hint"><?php p($l->t('Assign PTO policies to users and set their initial balances')); ?></p>
+        <div id="pto-policy-assignment"></div>
+    </div>
 </div>
