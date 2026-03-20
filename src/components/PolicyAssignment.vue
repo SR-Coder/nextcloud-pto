@@ -169,7 +169,7 @@ export default {
                 return this.balanceUpdates[policyId]
             }
             const balance = this.userBalances.find(b => b.policyId === policyId)
-            return balance ? balance.balance : 0
+            return balance ? balance.availableBalance : 0
         },
         
         togglePolicy(policyId, checked) {

@@ -35,15 +35,24 @@ class BalanceController extends Controller {
     }
 
     /**
-     * Get current user's balances only
+     * Get current user's balances only (or any user if admin with userId param)
      * @NoAdminRequired
      * @NoCSRFRequired
      */
-    public function index(): DataResponse {
-        $userId = $this->getUserId();
-        $balances = $this->service->getUserBalancesWithPolicies($userId);
+    public function index(?string $userId = null): DataResponse {
+        // If userId is provided, check if current user is admin
+        if ($userId !== null) {
+            if (!$this->authService->isAdmin($this->getUserId())) {
+                return new DataResponse(['error' => 'Only administrators can view other users balances'], Http::STATUS_FORBIDDEN);
+            }
+            $targetUserId = $userId;
+        } else {
+            $targetUserId = $this->getUserId();
+        }
+        
+        $balances = $this->service->getUserBalancesWithPolicies($targetUserId);
 
-        return new DataResponse(['balances' => $balances]);
+        return new DataResponse($balances);
     }
 
     /**
