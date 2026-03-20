@@ -30,6 +30,7 @@ return [
         ['name' => 'balance#show', 'url' => '/api/v1/balances/{policyId}', 'verb' => 'GET'],
         ['name' => 'balance#processAccrual', 'url' => '/api/v1/balances/{policyId}/accrual', 'verb' => 'POST'],
         ['name' => 'balance#assignPolicy', 'url' => '/api/v1/balances/assign', 'verb' => 'POST'],
+        ['name' => 'balance#removePolicy', 'url' => '/api/v1/balances/remove', 'verb' => 'POST'],
         
         // Users API (Admin)
         ['name' => 'user#index', 'url' => '/api/v1/users', 'verb' => 'GET'],

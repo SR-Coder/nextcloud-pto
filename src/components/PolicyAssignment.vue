@@ -220,6 +220,14 @@ export default {
                     })
                 }
                 
+                // Remove policies
+                for (const policyId of this.pendingRemoval) {
+                    await apiPost('balances/remove', {
+                        userId: this.selectedUserId,
+                        policyId: parseInt(policyId)
+                    })
+                }
+                
                 // Update existing balances
                 for (const policyId in this.balanceUpdates) {
                     const balance = this.userBalances.find(b => b.policyId === parseInt(policyId))
@@ -228,9 +236,6 @@ export default {
                         // For now, we'll skip this - could add later
                     }
                 }
-                
-                // Note: Policy removal would need a DELETE endpoint
-                // For now, admin can do this via SQL if needed
                 
                 this.successMessage = 'Policy assignments saved successfully'
                 await this.loadUserPolicies()

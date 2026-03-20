@@ -102,4 +102,21 @@ class BalanceController extends Controller {
             return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
         }
     }
+
+    /**
+     * Remove a policy from a user (delete balance) - admin only
+     * @NoAdminRequired
+     */
+    public function removePolicy(string $userId, int $policyId): DataResponse {
+        try {
+            if (!$this->authService->isAdmin($this->getUserId())) {
+                return new DataResponse(['error' => 'Only administrators can remove policies'], Http::STATUS_FORBIDDEN);
+            }
+
+            $this->service->deleteBalance($userId, $policyId);
+            return new DataResponse(['success' => true]);
+        } catch (\Exception $e) {
+            return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+        }
+    }
 }
