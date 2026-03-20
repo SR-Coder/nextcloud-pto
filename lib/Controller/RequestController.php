@@ -268,4 +268,24 @@ class RequestController extends Controller {
             return new DataResponse(['error' => 'Failed to retrieve approval history'], Http::STATUS_NOT_FOUND);
         }
     }
+
+    /**
+     * Get approval history (approved/denied requests) for the current manager
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     */
+    public function history(?int $limit = 50): DataResponse {
+        try {
+            $managerId = $this->getUserId();
+            $requests = $this->service->findHistoryForManager($managerId, $limit ?? 50);
+            
+            return new DataResponse($requests);
+        } catch (\Exception $e) {
+            \OC::$server->getLogger()->error('Error finding approval history: ' . $e->getMessage(), [
+                'app' => 'pto',
+                'exception' => $e
+            ]);
+            return new DataResponse(['error' => 'Failed to load approval history'], Http::STATUS_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

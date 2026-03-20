@@ -15,9 +15,18 @@ A comprehensive PTO (Paid Time Off) and vacation tracking application for Nextcl
 - **Request & Approval Workflow**
   - User request submission with date pickers
   - Automatic business day calculation
-  - Manager approval queue
+  - Manager approval queue with collapsible history
   - Request history with status tracking
   - Request cancellation (before approval)
+  - Approval/denial history view for managers
+
+- **Notifications** 🔔
+  - Request submitted → Managers notified
+  - Request approved → Employee notified
+  - Request denied → Employee notified
+  - Request cancelled → Managers notified
+  - Native Nextcloud notification integration
+  - Appears in Nextcloud notification bell
 
 - **Native Nextcloud Integration**
   - Uses Nextcloud's built-in user management
@@ -44,11 +53,11 @@ A comprehensive PTO (Paid Time Off) and vacation tracking application for Nextcl
 
 ### 🚧 Planned Features
 
-- Email/push notifications
+- Email notifications (in-app notifications ✅ working)
 - Background jobs for automatic accrual
-- Reporting dashboard
-- Approval history view
+- Reporting/analytics dashboard
 - Multi-language support (i18n)
+- Calendar event deletion on cancel/deny
 
 ## 📋 Requirements
 
@@ -264,8 +273,8 @@ MIT License - see [LICENSE](LICENSE) file
 
 ## ⚠️ Status
 
-**Current Version:** 0.4.3  
+**Current Version:** 0.5.2  
 **Status:** Beta - Ready for testing in production-like environments  
 **App Store:** Pending submission
 
-The core features are working and secure, including calendar integration. Notifications and background jobs are planned for the next release.
+The core features are working and secure, including calendar integration and full notification system. Background jobs and reporting dashboard are planned for the next release.

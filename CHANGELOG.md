@@ -4,6 +4,73 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.5.2 - 2026-03-19
+
+### Added
+- **Cancel Notification** - Managers receive notification when employee cancels a PTO request
+  - `notifyRequestCancelled()` in NotificationService
+  - `prepareRequestCancelled()` in Notifier
+  - Integrated into RequestService::cancelRequest()
+  - Shows employee name, hours, and date range
+
+### Technical
+- Notification sent to all managers when request is cancelled
+- Does not immediately remove notification (allows managers to see it)
+
+## 0.5.1 - 2026-03-19
+
+### Fixed
+- **Nextcloud Notification System Now Working!**
+  - Added `\OC_App::loadApp('notifications')` before calling notify()
+  - Root cause: notifications app wasn't auto-loaded, so IApp implementation wasn't registered
+  - This caused notify() to silently loop through zero apps and do nothing
+
+### Changed
+- Removed excessive debug logging from NotificationService
+- Cleaned up Notifier (removed action buttons that need OCS routes)
+- All notification types now working:
+  - Request submitted → Managers notified
+  - Request approved → Employee notified
+  - Request denied → Employee notified
+
+### Technical
+- Works on Nextcloud 27.1.11 and all versions with notifications app
+- Follows official Nextcloud notification API documentation
+- Notifications appear in bell icon and are stored in oc_notifications table
+
+## 0.5.0 - 2026-03-19
+
+### Added
+- **Approval History View** - Collapsible history section in Approval Queue
+  - Shows last 50 approved/denied requests for current manager
+  - Displays user name, leave type, dates, hours, and decision date
+  - Sorted by decision date (most recent first)
+  - New API endpoint: `GET /api/v1/requests/history`
+  - `RequestService::findHistoryForManager()` method
+  - Updated `RequestMapper` methods to accept limit parameter
+
+### Changed
+- History section always visible (shows "No approval history yet" when empty)
+- Sort by `updated_at DESC` instead of `created_at ASC`
+
+### Fixed
+- `formatDate()` error changed to `formatDateTime()`
+- History section visibility logic
+
+## 0.4.4 - 2026-03-19
+
+### Fixed
+- **Dark Mode Compatibility** - Replaced all hard-coded colors with Nextcloud CSS variables
+  - Changed `#333`, `#555` → `var(--color-main-text)`
+  - Changed `#666` → `var(--color-text-lighter)`
+  - Changed `#0082c9` → `var(--color-primary-element)`
+  - Changed `white` → `var(--color-main-background)`
+  - Manager assignment info box now readable in dark mode
+
+### Changed
+- All Vue components and views use theme-aware colors
+- Text is readable in both light and dark themes
+
 ## 0.4.3 - 2026-03-19
 
 ### Added

@@ -10,6 +10,7 @@ return [
         // Requests API
         ['name' => 'request#index', 'url' => '/api/v1/requests', 'verb' => 'GET'],
         ['name' => 'request#pending', 'url' => '/api/v1/requests/pending', 'verb' => 'GET'],
+        ['name' => 'request#history', 'url' => '/api/v1/requests/history', 'verb' => 'GET'],
         ['name' => 'request#show', 'url' => '/api/v1/requests/{id}', 'verb' => 'GET'],
         ['name' => 'request#create', 'url' => '/api/v1/requests', 'verb' => 'POST'],
         ['name' => 'request#approve', 'url' => '/api/v1/requests/{id}/approve', 'verb' => 'POST'],
