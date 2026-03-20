@@ -124,7 +124,7 @@ export default {
         async loadUsers() {
             try {
                 const data = await apiGet('users')
-                this.users = data
+                this.users = data.users || data
             } catch (error) {
                 this.errorMessage = 'Failed to load users'
             }
