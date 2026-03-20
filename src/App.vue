@@ -1,9 +1,12 @@
 <template>
+    <!-- Loading state -->
     <div v-if="loading" id="app-content">
         <div id="app-content-wrapper">
             <p style="padding: 2rem;">Loading...</p>
         </div>
     </div>
+    
+    <!-- No access state -->
     <div v-else-if="!hasAccess" id="app-content">
         <div id="app-content-wrapper" style="padding: 2rem;">
             <h2>PTO Tracker Not Available</h2>
@@ -11,7 +14,9 @@
             <p>Please contact your administrator to request access to the PTO Tracker.</p>
         </div>
     </div>
-    <div v-else>
+    
+    <!-- Has access - render navigation and content as siblings (required for Nextcloud layout) -->
+    <template v-else>
         <div id="app-navigation">
             <Navigation />
         </div>
@@ -20,7 +25,7 @@
                 <router-view />
             </div>
         </div>
-    </div>
+    </template>
 </template>
 
 <script>
