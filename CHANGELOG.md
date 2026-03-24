@@ -4,24 +4,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 0.7.0 - 2026-03-24
+## 1.0.0 - 2026-03-24
+
+### Release Notes
+**First stable release!** Fully tested and working on Nextcloud 33.
 
 ### Added
-- **Nextcloud 33 Compatibility**
-  - Upgraded to Nextcloud 33 support
-  - Updated Calendar API integration for NC33 changes
-  - Tested on NC33.0.16 with Calendar 6.2.1
+- Complete Nextcloud 33 compatibility
+- Flexible PTO policies (unlimited, accrual-based, fixed annual)
+- Manager approval workflow
+- Native Nextcloud notifications
+- Calendar integration
+- Admin policy management UI
+- Access control per user
+- Dark mode support
+- Multiple leave types
 
 ### Changed
-- Removed `setAllDay()` method call (deprecated in NC33 Calendar API)
-- Added explicit script/style tags in main.php template
-- Bundle Vue in Vite build (NC33 doesn't expose it as global)
-- Minimum version now NC33+ (dropped NC27/28 support)
+- Migrated to Nextcloud 33 APIs
+- Updated Calendar integration for NC33
+- Removed deprecated API calls
+- Minimum requirements: NC33+, PHP 8.2+
 
 ### Fixed
-- Calendar event creation now works on NC33
-- Frontend properly loads on NC33
-- All features fully functional on NC33
+- Calendar event creation on NC33
+- Logger calls updated for NC33 compatibility
+- Template script/style loading
+- All features fully functional
+
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/)
+and this project adheres to [Semantic Versioning](http://semver.org/).
+>>>>>>> 765692d (Release v1.0.0 - First Stable Release)
 
 ## 0.5.6 - 2026-03-19
 
