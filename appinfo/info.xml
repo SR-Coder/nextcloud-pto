@@ -21,7 +21,7 @@ Features:
 - Request cancellation before approval
 - Secure (SQL injection, XSS, CSRF protection)
     ]]></description>
-    <version>0.5.6</version>
+    <version>0.6.0</version>
     <licence>MIT</licence>
     <author mail="jim@sparerecords.com" homepage="https://sparerecords.com">JCR Labs</author>
     <namespace>PTO</namespace>
@@ -34,7 +34,7 @@ Features:
     <screenshot>https://raw.githubusercontent.com/SR-Coder/nextcloud-pto/main/screenshots/04-approvals.png</screenshot>
     <screenshot>https://raw.githubusercontent.com/SR-Coder/nextcloud-pto/main/screenshots/05-admin-settings.png</screenshot>
     <dependencies>
-        <nextcloud min-version="25" max-version="28"/>
+        <nextcloud min-version="25" max-version="33"/>
         <php min-version="8.0"/>
     </dependencies>
     <navigations>
