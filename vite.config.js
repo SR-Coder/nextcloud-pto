@@ -10,11 +10,12 @@ export default defineConfig({
     build: {
         outDir: 'js',
         emptyOutDir: false,
-        minify: false, // Disable minification to debug
+        minify: false,
         rollupOptions: {
             input: resolve(__dirname, 'src/main.js'),
             output: {
                 format: 'iife',
+                name: 'PTOApp',
                 entryFileNames: 'pto-main.js',
                 assetFileNames: (assetInfo) => {
                     if (assetInfo.name && assetInfo.name.endsWith('.css')) {
@@ -23,6 +24,7 @@ export default defineConfig({
                     return 'pto-main.[ext]'
                 },
             },
+            external: [],
         },
     },
 })
