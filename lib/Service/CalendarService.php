@@ -182,12 +182,12 @@ class CalendarService {
         // End date should be the day AFTER the last day (iCal convention)
         $end = \DateTimeImmutable::createFromMutable($endDate)->setTime(0, 0, 0)->add(new \DateInterval('P1D'));
 
-        $builder = $this->calendarManager->createEventBuilder()
+$builder = $this->calendarManager->createEventBuilder()
             ->setStartDate($start)
             ->setEndDate($end)
             ->setSummary($summary)
-            ->setDescription($description)
-            ->setAllDay(true);
+            ->setDescription($description);
+        // Note: NC33 removed setAllDay() - using date-only objects implies all-day
 
         // Create in calendar
         $builder->createInCalendar($calendar);

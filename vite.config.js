@@ -23,12 +23,8 @@ export default defineConfig({
                     }
                     return 'pto-main.[ext]'
                 },
-                globals: {
-                    vue: 'Vue',
-                    'vue-router': 'VueRouter',
-                },
             },
-            external: ['vue', 'vue-router'],
+            external: [],
         },
     },
 })
