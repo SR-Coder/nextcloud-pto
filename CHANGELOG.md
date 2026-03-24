@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.7.0 - 2026-03-24
+
+### Added
+- **Nextcloud 33 Compatibility**
+  - Upgraded to Nextcloud 33 support
+  - Updated Calendar API integration for NC33 changes
+  - Tested on NC33.0.16 with Calendar 6.2.1
+
+### Changed
+- Removed `setAllDay()` method call (deprecated in NC33 Calendar API)
+- Added explicit script/style tags in main.php template
+- Bundle Vue in Vite build (NC33 doesn't expose it as global)
+- Minimum version now NC33+ (dropped NC27/28 support)
+
+### Fixed
+- Calendar event creation now works on NC33
+- Frontend properly loads on NC33
+- All features fully functional on NC33
+
 ## 0.5.6 - 2026-03-19
 
 ### Fixed
