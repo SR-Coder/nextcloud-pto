@@ -12,22 +12,26 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use OCP\IUserSession;
+use Psr\Log\LoggerInterface;
 
 class RequestController extends Controller {
     private RequestService $service;
     private AuthorizationService $authService;
     private IUserSession $userSession;
+    private LoggerInterface $logger;
 
     public function __construct(
         IRequest $request,
         RequestService $service,
         AuthorizationService $authService,
-        IUserSession $userSession
+        IUserSession $userSession,
+        LoggerInterface $logger
     ) {
         parent::__construct(Application::APP_ID, $request);
         $this->service = $service;
         $this->authService = $authService;
         $this->userSession = $userSession;
+        $this->logger = $logger;
     }
 
     private function getUserId(): string {
@@ -66,6 +70,7 @@ class RequestController extends Controller {
             return new DataResponse($request);
         } catch (\Exception $e) {
             // Log the actual error but don't expose it to users
+            $this->logger->error('Failed to show request: ' . $e->getMessage(), ['app' => 'pto']);
             return new DataResponse(['error' => 'Request not found'], Http::STATUS_NOT_FOUND);
         }
     }
@@ -124,6 +129,7 @@ class RequestController extends Controller {
 
             return new DataResponse($request, Http::STATUS_CREATED);
         } catch (\Exception $e) {
+            $this->logger->error('Failed to create request: ' . $e->getMessage(), ['app' => 'pto']);
             return new DataResponse(['error' => 'Failed to create request. Please check your input and try again.'], Http::STATUS_BAD_REQUEST);
         }
     }
@@ -157,6 +163,7 @@ class RequestController extends Controller {
             $result = $this->service->approveRequest($id, $managerId, $comments);
             return new DataResponse($result);
         } catch (\Exception $e) {
+            $this->logger->error('Failed to approve request: ' . $e->getMessage(), ['app' => 'pto']);
             return new DataResponse(['error' => 'Failed to approve request. Please try again.'], Http::STATUS_BAD_REQUEST);
         }
     }
@@ -190,6 +197,7 @@ class RequestController extends Controller {
             $result = $this->service->denyRequest($id, $managerId, $comments);
             return new DataResponse($result);
         } catch (\Exception $e) {
+            $this->logger->error('Failed to deny request: ' . $e->getMessage(), ['app' => 'pto']);
             return new DataResponse(['error' => 'Failed to deny request. Please try again.'], Http::STATUS_BAD_REQUEST);
         }
     }
@@ -210,6 +218,7 @@ class RequestController extends Controller {
             $result = $this->service->cancelRequest($id, $userId);
             return new DataResponse($result);
         } catch (\Exception $e) {
+            $this->logger->error('Failed to cancel request: ' . $e->getMessage(), ['app' => 'pto']);
             return new DataResponse(['error' => 'Failed to cancel request. Please try again.'], Http::STATUS_BAD_REQUEST);
         }
     }
@@ -223,12 +232,19 @@ class RequestController extends Controller {
     public function pending(): DataResponse {
         try {
             $managerId = $this->getUserId();
+            if (!$this->authService->canApproveRequests($managerId)) {
+                return new DataResponse(['error' => 'Only managers can approve requests'], Http::STATUS_FORBIDDEN);
+            }
+
+            $this->logger->info('Finding pending requests for manager: ' . $managerId, ['app' => 'pto']);
             
             $requests = $this->service->findPendingForManager($managerId);
             
+            $this->logger->info('Found ' . count($requests) . ' pending requests', ['app' => 'pto']);
             
             return new DataResponse($requests);
         } catch (\Exception $e) {
+            $this->logger->error('Error finding pending requests: ' . $e->getMessage(), [
                 'app' => 'pto',
                 'exception' => $e
             ]);
@@ -256,6 +272,7 @@ class RequestController extends Controller {
             $approvals = $this->service->getApprovals($id);
             return new DataResponse($approvals);
         } catch (\Exception $e) {
+            $this->logger->error('Failed to get approvals: ' . $e->getMessage(), ['app' => 'pto']);
             return new DataResponse(['error' => 'Failed to retrieve approval history'], Http::STATUS_NOT_FOUND);
         }
     }
@@ -268,10 +285,15 @@ class RequestController extends Controller {
     public function history(?int $limit = 50): DataResponse {
         try {
             $managerId = $this->getUserId();
+            if (!$this->authService->canApproveRequests($managerId)) {
+                return new DataResponse(['error' => 'Only managers can approve requests'], Http::STATUS_FORBIDDEN);
+            }
+
             $requests = $this->service->findHistoryForManager($managerId, $limit ?? 50);
             
             return new DataResponse($requests);
         } catch (\Exception $e) {
+            $this->logger->error('Error finding approval history: ' . $e->getMessage(), [
                 'app' => 'pto',
                 'exception' => $e
             ]);
