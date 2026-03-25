@@ -74,16 +74,22 @@ A comprehensive PTO (Paid Time Off) and vacation tracking application for Nextcl
 
 ## 📋 Requirements
 
-- Nextcloud 33+
-- PHP 8.2+
+- Nextcloud 33 or higher
+- PHP 8.2 or higher
 - MySQL, PostgreSQL, or SQLite
 
 ## 🚀 Installation
 
-### Production (from App Store)
-*Coming soon - pending Nextcloud App Store submission*
+### From Nextcloud App Store (Recommended)
 
-### Development/Testing
+1. Log in to your Nextcloud instance as an administrator
+2. Go to **Apps** → Search for "PTO Tracker"
+3. Click **Download and enable**
+4. The app will install automatically with all dependencies
+
+### Manual Installation (Development)
+
+**For development/testing only:**
 
 1. **Clone the repository:**
    ```bash
@@ -293,7 +299,14 @@ vendor/bin/php-cs-fixer fix
 
 See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
-### v0.5.6 (2026-03-19) - Latest
+### v1.0.0 (2026-03-24) - Latest
+- ✅ **Nextcloud 33+ support** - Full compatibility with NC33 and future versions
+- ✅ **Improved UX** - Better messaging for admins on first install
+- ✅ **Automatic migrations** - Database tables created on first install
+- ✅ **App Store ready** - Signed release available
+- ✅ **Production stable** - All core features tested and working
+
+### v0.5.6 (2026-03-19)
 - ✅ **Policy assignment fully working** - Admins can assign/remove policies from users
 - ✅ **Access control** - Users without policies cannot access PTO app
 - ✅ **Permission-based navigation** - Approvals tab hidden for non-managers
@@ -368,13 +381,14 @@ Sponsors get priority support and help shape the roadmap.
 
 - [GitHub Repository](https://github.com/SR-Coder/nextcloud-pto)
 - [Issue Tracker](https://github.com/SR-Coder/nextcloud-pto/issues)
-- [Nextcloud App Store](https://apps.nextcloud.com/) *(coming soon)*
+- [Nextcloud App Store](https://apps.nextcloud.com/)
+- [Latest Release](https://github.com/SR-Coder/nextcloud-pto/releases/latest)
 
 ## ⚠️ Status
 
-**Current Version:** 0.5.6  
-**Status:** Beta - Ready for testing in production-like environments  
-**App Store:** Pending submission
+**Current Version:** 1.0.0  
+**Status:** Production Ready - Stable release for Nextcloud 33+  
+**App Store:** Available on [Nextcloud App Store](https://apps.nextcloud.com/)
 
 **What's Working:**
 - ✅ Complete PTO workflow (request, approve, deny, cancel)
