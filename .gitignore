@@ -17,6 +17,15 @@ css/
 .DS_Store
 Thumbs.db
 
+# Development artifacts (keep out of repo)
+*CHECKLIST*.md
+*SUBMISSION*.md
+*AUDIT*.md
+*REVIEW*.md
+*_DEV.md
+LOCAL_*.md
+*LINE_BY_LINE*.md
+
 # Logs
 *.log
 

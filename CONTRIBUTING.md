@@ -17,6 +17,12 @@
 - No "oops I forgot to commit" - commit early, commit often
 - Use `.gitignore` for local dev files only
 
+### 4. **NO DEVELOPMENT ARTIFACTS IN REPO**
+- Checklists, submission guides, audit reports = local files only
+- Use Issues/PRs for tracking, not markdown files
+- Only commit docs that help users/contributors long-term
+- Patterns blocked in `.gitignore`: `*CHECKLIST*.md`, `*AUDIT*.md`, `*REVIEW*.md`, `*_DEV.md`
+
 ## Branch Workflow
 
 ### Feature Development
