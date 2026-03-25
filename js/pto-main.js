@@ -8222,9 +8222,15 @@
     key: 1,
     id: "app-content"
   };
-  const _hoisted_3$4 = { id: "app-navigation" };
-  const _hoisted_4$4 = { id: "app-content" };
-  const _hoisted_5$4 = { id: "app-content-wrapper" };
+  const _hoisted_3$4 = {
+    id: "app-content-wrapper",
+    style: { "padding": "2rem" }
+  };
+  const _hoisted_4$4 = { key: 0 };
+  const _hoisted_5$4 = { key: 1 };
+  const _hoisted_6$4 = { id: "app-navigation" };
+  const _hoisted_7$4 = { id: "app-content" };
+  const _hoisted_8$4 = { id: "app-content-wrapper" };
   function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_Navigation = resolveComponent("Navigation");
     const _component_router_view = resolveComponent("router-view");
@@ -8232,21 +8238,23 @@
       createBaseVNode("div", { id: "app-content-wrapper" }, [
         createBaseVNode("p", { style: { "padding": "2rem" } }, "Loading...")
       ], -1)
-    ])])) : !$data.hasAccess ? (openBlock(), createElementBlock("div", _hoisted_2$4, [..._cache[1] || (_cache[1] = [
-      createBaseVNode("div", {
-        id: "app-content-wrapper",
-        style: { "padding": "2rem" }
-      }, [
-        createBaseVNode("h2", null, "PTO Tracker Not Available"),
-        createBaseVNode("p", null, "You do not have any PTO policies assigned to your account."),
-        createBaseVNode("p", null, "Please contact your administrator to request access to the PTO Tracker.")
-      ], -1)
-    ])])) : (openBlock(), createElementBlock(Fragment, { key: 2 }, [
+    ])])) : !$data.hasAccess ? (openBlock(), createElementBlock("div", _hoisted_2$4, [
       createBaseVNode("div", _hoisted_3$4, [
+        _cache[2] || (_cache[2] = createBaseVNode("h2", null, "PTO Tracker Not Available", -1)),
+        _cache[3] || (_cache[3] = createBaseVNode("p", null, "You do not have any PTO policies assigned to your account.", -1)),
+        _ctx.isAdmin ? (openBlock(), createElementBlock("p", _hoisted_4$4, [..._cache[1] || (_cache[1] = [
+          createBaseVNode("strong", null, "You are an administrator.", -1),
+          createTextVNode(" Go to ", -1),
+          createBaseVNode("strong", null, "Settings → Administration → PTO Management", -1),
+          createTextVNode(" to create policies and assign users. ", -1)
+        ])])) : (openBlock(), createElementBlock("p", _hoisted_5$4, "Please contact your administrator to request access to the PTO Tracker."))
+      ])
+    ])) : (openBlock(), createElementBlock(Fragment, { key: 2 }, [
+      createBaseVNode("div", _hoisted_6$4, [
         createVNode(_component_Navigation)
       ]),
-      createBaseVNode("div", _hoisted_4$4, [
-        createBaseVNode("div", _hoisted_5$4, [
+      createBaseVNode("div", _hoisted_7$4, [
+        createBaseVNode("div", _hoisted_8$4, [
           createVNode(_component_router_view)
         ])
       ])

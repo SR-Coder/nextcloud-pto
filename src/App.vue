@@ -11,7 +11,10 @@
         <div id="app-content-wrapper" style="padding: 2rem;">
             <h2>PTO Tracker Not Available</h2>
             <p>You do not have any PTO policies assigned to your account.</p>
-            <p>Please contact your administrator to request access to the PTO Tracker.</p>
+            <p v-if="isAdmin">
+                <strong>You are an administrator.</strong> Go to <strong>Settings → Administration → PTO Management</strong> to create policies and assign users.
+            </p>
+            <p v-else>Please contact your administrator to request access to the PTO Tracker.</p>
         </div>
     </div>
     
