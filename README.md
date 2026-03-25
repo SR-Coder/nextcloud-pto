@@ -28,7 +28,7 @@ A comprehensive PTO (Paid Time Off) and vacation tracking application for Nextcl
   - Request cancelled → Managers notified
   - Native Nextcloud notification integration
   - Appears in Nextcloud notification bell
-  - Works on Nextcloud 27+
+  - Works on Nextcloud 33+
 
 - **Policy Assignment & Access Control**
   - Admin UI to assign/remove policies per user
@@ -47,7 +47,7 @@ A comprehensive PTO (Paid Time Off) and vacation tracking application for Nextcl
     - Automatic event creation on approval
     - Admin-configurable calendar selection
     - RFC 5545 compliant all-day events
-    - Compatible with Nextcloud 27 and 28+
+    - Compatible with Nextcloud 33+
 
 - **Security**
   - CSRF protection on all write operations
@@ -74,8 +74,8 @@ A comprehensive PTO (Paid Time Off) and vacation tracking application for Nextcl
 
 ## 📋 Requirements
 
-- Nextcloud 25, 26, or 27
-- PHP 8.0+
+- Nextcloud 33+
+- PHP 8.2+
 - MySQL, PostgreSQL, or SQLite
 
 ## 🚀 Installation
