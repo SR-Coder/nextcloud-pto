@@ -66,7 +66,6 @@ class RequestController extends Controller {
             return new DataResponse($request);
         } catch (\Exception $e) {
             // Log the actual error but don't expose it to users
-            \OC::$server->getLogger()->error('Failed to show request: ' . $e->getMessage(), ['app' => 'pto']);
             return new DataResponse(['error' => 'Request not found'], Http::STATUS_NOT_FOUND);
         }
     }
@@ -125,7 +124,6 @@ class RequestController extends Controller {
 
             return new DataResponse($request, Http::STATUS_CREATED);
         } catch (\Exception $e) {
-            \OC::$server->getLogger()->error('Failed to create request: ' . $e->getMessage(), ['app' => 'pto']);
             return new DataResponse(['error' => 'Failed to create request. Please check your input and try again.'], Http::STATUS_BAD_REQUEST);
         }
     }
@@ -159,7 +157,6 @@ class RequestController extends Controller {
             $result = $this->service->approveRequest($id, $managerId, $comments);
             return new DataResponse($result);
         } catch (\Exception $e) {
-            \OC::$server->getLogger()->error('Failed to approve request: ' . $e->getMessage(), ['app' => 'pto']);
             return new DataResponse(['error' => 'Failed to approve request. Please try again.'], Http::STATUS_BAD_REQUEST);
         }
     }
@@ -193,7 +190,6 @@ class RequestController extends Controller {
             $result = $this->service->denyRequest($id, $managerId, $comments);
             return new DataResponse($result);
         } catch (\Exception $e) {
-            \OC::$server->getLogger()->error('Failed to deny request: ' . $e->getMessage(), ['app' => 'pto']);
             return new DataResponse(['error' => 'Failed to deny request. Please try again.'], Http::STATUS_BAD_REQUEST);
         }
     }
@@ -214,7 +210,6 @@ class RequestController extends Controller {
             $result = $this->service->cancelRequest($id, $userId);
             return new DataResponse($result);
         } catch (\Exception $e) {
-            \OC::$server->getLogger()->error('Failed to cancel request: ' . $e->getMessage(), ['app' => 'pto']);
             return new DataResponse(['error' => 'Failed to cancel request. Please try again.'], Http::STATUS_BAD_REQUEST);
         }
     }
@@ -228,15 +223,12 @@ class RequestController extends Controller {
     public function pending(): DataResponse {
         try {
             $managerId = $this->getUserId();
-            \OC::$server->getLogger()->info('Finding pending requests for manager: ' . $managerId, ['app' => 'pto']);
             
             $requests = $this->service->findPendingForManager($managerId);
             
-            \OC::$server->getLogger()->info('Found ' . count($requests) . ' pending requests', ['app' => 'pto']);
             
             return new DataResponse($requests);
         } catch (\Exception $e) {
-            \OC::$server->getLogger()->error('Error finding pending requests: ' . $e->getMessage(), [
                 'app' => 'pto',
                 'exception' => $e
             ]);
@@ -264,7 +256,6 @@ class RequestController extends Controller {
             $approvals = $this->service->getApprovals($id);
             return new DataResponse($approvals);
         } catch (\Exception $e) {
-            \OC::$server->getLogger()->error('Failed to get approvals: ' . $e->getMessage(), ['app' => 'pto']);
             return new DataResponse(['error' => 'Failed to retrieve approval history'], Http::STATUS_NOT_FOUND);
         }
     }
@@ -281,7 +272,6 @@ class RequestController extends Controller {
             
             return new DataResponse($requests);
         } catch (\Exception $e) {
-            \OC::$server->getLogger()->error('Error finding approval history: ' . $e->getMessage(), [
                 'app' => 'pto',
                 'exception' => $e
             ]);
