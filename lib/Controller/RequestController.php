@@ -130,7 +130,7 @@ class RequestController extends Controller {
             return new DataResponse($request, Http::STATUS_CREATED);
         } catch (\Exception $e) {
             $this->logger->error('Failed to create request: ' . $e->getMessage(), ['app' => 'pto']);
-            return new DataResponse(['error' => 'Failed to create request. Please check your input and try again.'], Http::STATUS_BAD_REQUEST);
+            return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
         }
     }
 

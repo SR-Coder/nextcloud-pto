@@ -60,9 +60,15 @@ export default {
                 if (Array.isArray(balances) && balances.length > 0) {
                     this.hasAccess = true
                 } else {
-                    // Check if admin (canApprove means user is admin or manager)
-                    const userData = await apiGet('users/managers')
-                    const currentUser = userData.users.find(u => u.id === OC.getCurrentUser().uid)
+                    // Check if admin/manager (non-admins will get 403, that's expected)
+                    let currentUser = null
+                    try {
+                        const userData = await apiGet('users/managers')
+                        currentUser = userData.users.find(u => u.id === OC.getCurrentUser().uid)
+                    } catch (e) {
+                        // 403 means user is not admin/manager, that's fine
+                        currentUser = null
+                    }
                     this.hasAccess = currentUser?.canApprove || false
                 }
             } catch (error) {
