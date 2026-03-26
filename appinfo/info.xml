@@ -34,7 +34,7 @@ Features:
     <screenshot>https://raw.githubusercontent.com/SR-Coder/nextcloud-pto/main/screenshots/04-approvals.png</screenshot>
     <screenshot>https://raw.githubusercontent.com/SR-Coder/nextcloud-pto/main/screenshots/05-admin-settings.png</screenshot>
     <dependencies>
-        <nextcloud min-version="33" max-version="33"/>
+        <nextcloud min-version="32" max-version="33"/>
         <php min-version="8.2"/>
     </dependencies>
     <navigations>
