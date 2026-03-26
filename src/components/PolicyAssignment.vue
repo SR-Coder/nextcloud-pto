@@ -149,7 +149,10 @@ export default {
             this.balanceUpdates = {}
             
             try {
-                this.userBalances = await apiGet(`balances?userId=${this.selectedUserId}`)
+                const response = await apiGet(`balances?userId=${this.selectedUserId}`)
+                // Ensure userBalances is always an array
+                this.userBalances = Array.isArray(response) ? response : 
+                                   (response && Array.isArray(response.balances)) ? response.balances : []
             } catch (error) {
                 this.errorMessage = 'Failed to load user balances'
                 this.userBalances = []

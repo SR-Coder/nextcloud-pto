@@ -31,15 +31,14 @@ export async function apiRequest(endpoint, options = {}) {
     })
 
     if (!response.ok) {
+        let errorMessage = `Error ${response.status}: ${response.statusText}`
         try {
-            // Try to parse JSON error response
             const errorData = await response.json()
-            const errorMessage = errorData.error || errorData.message || 'An error occurred'
-            throw new Error(errorMessage)
+            errorMessage = errorData.error || errorData.message || errorMessage
         } catch (e) {
-            // If JSON parsing fails, use status text
-            throw new Error(`Error ${response.status}: ${response.statusText}`)
+            // JSON parsing failed, use default errorMessage
         }
+        throw new Error(errorMessage)
     }
 
     // Handle 204 No Content

@@ -1,10 +1,10 @@
 (function() {
   "use strict";
   var __vite_style__ = document.createElement("style");
-  __vite_style__.textContent = '\n/* Import Nextcloud styles where available */\n.policy-management[data-v-b7879991] {\n    margin-top: 1rem;\n}\n.collapsible[data-v-b7879991] {\n    border: 1px solid var(--color-border, #e0e0e0);\n    border-radius: var(--border-radius, 4px);\n    margin-bottom: 1.5rem;\n}\n.collapsible summary[data-v-b7879991] {\n    padding: 12px 16px;\n    cursor: pointer;\n    font-weight: 600;\n    background: var(--color-background-hover, #f8f8f8);\n    border-radius: var(--border-radius, 4px);\n}\n.collapsible summary[data-v-b7879991]:hover {\n    background: var(--color-background-dark, #f0f0f0);\n}\n.collapsible[open] summary[data-v-b7879991] {\n    border-bottom: 1px solid var(--color-border, #e0e0e0);\n    border-radius: var(--border-radius, 4px) var(--border-radius, 4px) 0 0;\n}\n.policy-form[data-v-b7879991] {\n    padding: 16px;\n}\n.form-row[data-v-b7879991] {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));\n    gap: 1rem;\n    margin-bottom: 1rem;\n}\n.form-group[data-v-b7879991] {\n    display: flex;\n    flex-direction: column;\n}\n.form-group label[data-v-b7879991] {\n    font-weight: 600;\n    margin-bottom: 4px;\n    color: var(--color-text-lighter, #555);\n    font-size: 0.9rem;\n}\n.form-group input[data-v-b7879991],\n.form-group select[data-v-b7879991] {\n    padding: 8px;\n    border: 1px solid var(--color-border-dark, #ddd);\n    border-radius: var(--border-radius, 4px);\n    font-size: 1rem;\n}\n.form-group input[data-v-b7879991]:focus,\n.form-group select[data-v-b7879991]:focus {\n    outline: none;\n    border-color: var(--color-primary-element, #0082c9);\n}\nbutton.primary[data-v-b7879991],\nbutton.secondary[data-v-b7879991] {\n    padding: 10px 20px;\n    border: none;\n    border-radius: var(--border-radius, 4px);\n    font-size: 1rem;\n    cursor: pointer;\n    transition: background-color 0.2s;\n    margin-top: 1rem;\n}\nbutton.primary[data-v-b7879991] {\n    background: var(--color-primary-element, #0082c9);\n    color: white;\n}\nbutton.primary[data-v-b7879991]:hover:not(:disabled) {\n    background: var(--color-primary-element-hover, #006aa3);\n}\nbutton.primary[data-v-b7879991]:disabled {\n    opacity: 0.5;\n    cursor: not-allowed;\n}\nbutton.secondary[data-v-b7879991] {\n    background: var(--color-background-hover, #f5f5f5);\n    color: var(--color-main-text, #333);\n    border: 1px solid var(--color-border, #ddd);\n}\nbutton.secondary[data-v-b7879991]:hover {\n    background: var(--color-background-dark, #e8e8e8);\n}\n.error-message[data-v-b7879991] {\n    color: var(--color-error, #d32f2f);\n    margin-top: 1rem;\n    padding: 12px;\n    background: var(--color-error-background, #ffebee);\n    border-radius: var(--border-radius, 4px);\n}\n.success-message[data-v-b7879991] {\n    color: var(--color-success, #388e3c);\n    margin-top: 1rem;\n    padding: 12px;\n    background: var(--color-success-background, #e8f5e9);\n    border-radius: var(--border-radius, 4px);\n}\n.loading-message[data-v-b7879991],\n.placeholder-message[data-v-b7879991] {\n    color: var(--color-text-lighter, #666);\n    font-style: italic;\n    padding: 1rem;\n}\n.subsection h4[data-v-b7879991] {\n    margin: 1.5rem 0 1rem 0;\n    color: var(--color-main-text, #555);\n}\n.policies-list[data-v-b7879991] {\n    display: grid;\n    gap: 1rem;\n}\n.policy-card[data-v-b7879991] {\n    border: 1px solid var(--color-border, #e0e0e0);\n    border-radius: var(--border-radius, 4px);\n    padding: 1rem;\n    background: var(--color-background-hover, #fafafa);\n}\n.policy-header[data-v-b7879991] {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    margin-bottom: 0.5rem;\n}\n.policy-header h5[data-v-b7879991] {\n    margin: 0;\n    color: var(--color-main-text, #333);\n}\n.policy-badge[data-v-b7879991] {\n    background: var(--color-primary-element, #0082c9);\n    color: white;\n    padding: 4px 12px;\n    border-radius: 12px;\n    font-size: 0.875rem;\n}\n.policy-details[data-v-b7879991] {\n    color: var(--color-text-lighter, #555);\n    margin-bottom: 1rem;\n}\n.policy-actions[data-v-b7879991] {\n    display: flex;\n    gap: 0.5rem;\n}\n\n.manager-assignment[data-v-bb3ffbc7] {\n    margin-top: 1rem;\n}\n.info-box[data-v-bb3ffbc7] {\n    background: var(--color-background-hover);\n    border: 1px solid var(--color-border);\n    border-left: 3px solid var(--color-success);\n    border-radius: var(--border-radius);\n    padding: 1.5rem;\n    margin-bottom: 2rem;\n}\n.info-box p[data-v-bb3ffbc7] {\n    margin: 0.5rem 0;\n    color: var(--color-main-text);\n}\n.info-box ol[data-v-bb3ffbc7] {\n    margin: 0.5rem 0 0.5rem 1.5rem;\n    color: var(--color-main-text);\n}\n.manager-summary h4[data-v-bb3ffbc7] {\n    color: var(--color-main-text, #555);\n    margin-bottom: 1rem;\n}\n.loading-message[data-v-bb3ffbc7],\n.placeholder-message[data-v-bb3ffbc7] {\n    color: var(--color-text-lighter, #666);\n    font-style: italic;\n    padding: 1rem;\n}\n.users-table[data-v-bb3ffbc7] {\n    border: 1px solid var(--color-border, #e0e0e0);\n    border-radius: var(--border-radius, 4px);\n    overflow: hidden;\n}\n.table-header[data-v-bb3ffbc7] {\n    display: grid;\n    grid-template-columns: 2fr 3fr 1fr;\n    gap: 1rem;\n    padding: 12px 16px;\n    background: var(--color-background-dark, #f8f8f8);\n    font-weight: 600;\n    border-bottom: 1px solid var(--color-border, #e0e0e0);\n}\n.user-row[data-v-bb3ffbc7] {\n    display: grid;\n    grid-template-columns: 2fr 3fr 1fr;\n    gap: 1rem;\n    padding: 12px 16px;\n    border-bottom: 1px solid var(--color-border, #e0e0e0);\n    align-items: center;\n}\n.user-row[data-v-bb3ffbc7]:last-child {\n    border-bottom: none;\n}\n.user-row[data-v-bb3ffbc7]:hover {\n    background: var(--color-background-hover, #fafafa);\n}\n.col-user[data-v-bb3ffbc7] {\n    display: flex;\n    flex-direction: column;\n}\n.user-id[data-v-bb3ffbc7] {\n    color: var(--color-text-lighter, #666);\n    font-size: 0.875rem;\n}\n.col-managers[data-v-bb3ffbc7] {\n    color: var(--color-main-text, #333);\n}\n.no-managers[data-v-bb3ffbc7] {\n    color: var(--color-text-lighter, #999);\n    font-style: italic;\n}\n.col-can-approve[data-v-bb3ffbc7] {\n    display: flex;\n    gap: 0.5rem;\n    justify-content: flex-end;\n}\n.badge[data-v-bb3ffbc7] {\n    padding: 4px 12px;\n    border-radius: 12px;\n    font-size: 0.75rem;\n    font-weight: 600;\n}\n.badge.manager[data-v-bb3ffbc7] {\n    background: var(--color-primary-element, #0082c9);\n    color: white;\n}\n.no-action[data-v-bb3ffbc7] {\n    color: var(--color-text-lighter, #999);\n}\n.error-message[data-v-bb3ffbc7] {\n    color: var(--color-error, #d32f2f);\n    margin-top: 1rem;\n    padding: 12px;\n    background: var(--color-error-background, #ffebee);\n    border-radius: var(--border-radius, 4px);\n}\n\n.calendar-settings[data-v-5987f3e4] {\n    max-width: 600px;\n}\n.form-group[data-v-5987f3e4] {\n    margin-bottom: 1.5rem;\n}\n.form-group label[data-v-5987f3e4] {\n    display: block;\n    font-weight: 500;\n    margin-bottom: 0.5rem;\n    color: var(--color-main-text);\n}\n.form-group select[data-v-5987f3e4] {\n    width: 100%;\n    padding: 0.75rem;\n    border: 1px solid var(--color-border-dark);\n    border-radius: var(--border-radius);\n    font-size: 1rem;\n    font-family: inherit;\n    min-height: 44px;\n    background-color: var(--color-main-background);\n    color: var(--color-main-text);\n}\n.settings-hint[data-v-5987f3e4] {\n    color: var(--color-text-lighter);\n    font-size: 0.875rem;\n    margin-top: 0.5rem;\n    line-height: 1.4;\n}\n.loading[data-v-5987f3e4] {\n    color: var(--color-text-lighter);\n    padding: 1rem 0;\n}\n.success-message[data-v-5987f3e4] {\n    background: var(--color-success);\n    color: var(--color-primary-element-text);\n    padding: 0.75rem 1rem;\n    border-radius: var(--border-radius);\n    margin-top: 1rem;\n    opacity: 0.9;\n}\n.error-message[data-v-5987f3e4] {\n    background: var(--color-error);\n    color: var(--color-primary-element-text);\n    padding: 0.75rem 1rem;\n    border-radius: var(--border-radius);\n    margin-top: 1rem;\n    opacity: 0.9;\n}\n\n.policy-assignment[data-v-2b3deaaa] {\n    margin-top: 2rem;\n    padding: 1.5rem;\n    background: var(--color-main-background);\n    border: 1px solid var(--color-border);\n    border-radius: var(--border-radius);\n}\n.section-desc[data-v-2b3deaaa] {\n    color: var(--color-text-lighter);\n    margin-bottom: 1rem;\n}\n.form-group[data-v-2b3deaaa] {\n    margin-bottom: 1.5rem;\n}\n.form-group label[data-v-2b3deaaa] {\n    display: block;\n    margin-bottom: 0.5rem;\n    font-weight: bold;\n}\n.form-group select[data-v-2b3deaaa] {\n    width: 100%;\n    max-width: 400px;\n    padding: 0.5rem;\n    border: 1px solid var(--color-border);\n    border-radius: var(--border-radius);\n    background: var(--color-main-background);\n    color: var(--color-main-text);\n}\n.policy-list[data-v-2b3deaaa] {\n    margin-top: 2rem;\n}\n.policy-items[data-v-2b3deaaa] {\n    margin-top: 1rem;\n}\n.policy-item[data-v-2b3deaaa] {\n    display: flex;\n    align-items: center;\n    justify-content: space-between;\n    padding: 1rem;\n    margin-bottom: 0.5rem;\n    background: var(--color-background-dark);\n    border-radius: var(--border-radius);\n}\n.policy-checkbox[data-v-2b3deaaa] {\n    flex: 1;\n}\n.policy-checkbox input[type="checkbox"][data-v-2b3deaaa] {\n    margin-right: 0.5rem;\n}\n.policy-checkbox label[data-v-2b3deaaa] {\n    cursor: pointer;\n}\n.policy-type[data-v-2b3deaaa] {\n    margin-left: 0.5rem;\n    color: var(--color-text-lighter);\n    font-size: 0.9em;\n}\n.policy-balance[data-v-2b3deaaa] {\n    display: flex;\n    align-items: center;\n    gap: 0.5rem;\n}\n.policy-balance label[data-v-2b3deaaa] {\n    font-size: 0.9em;\n    color: var(--color-text-lighter);\n}\n.policy-balance input[data-v-2b3deaaa] {\n    width: 80px;\n    padding: 0.25rem 0.5rem;\n    border: 1px solid var(--color-border);\n    border-radius: var(--border-radius);\n    background: var(--color-main-background);\n    color: var(--color-main-text);\n}\n.balance-label[data-v-2b3deaaa] {\n    font-size: 0.9em;\n    color: var(--color-text-lighter);\n}\n.actions[data-v-2b3deaaa] {\n    margin-top: 1.5rem;\n    display: flex;\n    gap: 0.5rem;\n}\n.actions button[data-v-2b3deaaa] {\n    padding: 0.5rem 1rem;\n    border: none;\n    border-radius: var(--border-radius);\n    cursor: pointer;\n    font-weight: bold;\n}\n.actions button.primary[data-v-2b3deaaa] {\n    background: var(--color-primary-element);\n    color: var(--color-primary-element-text);\n}\n.actions button[data-v-2b3deaaa]:not(.primary) {\n    background: var(--color-background-dark);\n    color: var(--color-main-text);\n}\n.actions button[data-v-2b3deaaa]:disabled {\n    opacity: 0.5;\n    cursor: not-allowed;\n}\n.loading-message[data-v-2b3deaaa],\n.info-message[data-v-2b3deaaa] {\n    color: var(--color-text-lighter);\n    font-style: italic;\n    padding: 1rem;\n}\n.success-message[data-v-2b3deaaa] {\n    background: var(--color-success);\n    color: var(--color-primary-element-text);\n    padding: 0.75rem 1rem;\n    border-radius: var(--border-radius);\n    margin-top: 1rem;\n}\n.error-message[data-v-2b3deaaa] {\n    background: var(--color-error);\n    color: var(--color-primary-element-text);\n    padding: 0.75rem 1rem;\n    border-radius: var(--border-radius);\n    margin-top: 1rem;\n}\n/*$vite$:1*/';
+  __vite_style__.textContent = '\n/* Import Nextcloud styles where available */\n.policy-management[data-v-b7879991] {\n    margin-top: 1rem;\n}\n.collapsible[data-v-b7879991] {\n    border: 1px solid var(--color-border, #e0e0e0);\n    border-radius: var(--border-radius, 4px);\n    margin-bottom: 1.5rem;\n}\n.collapsible summary[data-v-b7879991] {\n    padding: 12px 16px;\n    cursor: pointer;\n    font-weight: 600;\n    background: var(--color-background-hover, #f8f8f8);\n    border-radius: var(--border-radius, 4px);\n}\n.collapsible summary[data-v-b7879991]:hover {\n    background: var(--color-background-dark, #f0f0f0);\n}\n.collapsible[open] summary[data-v-b7879991] {\n    border-bottom: 1px solid var(--color-border, #e0e0e0);\n    border-radius: var(--border-radius, 4px) var(--border-radius, 4px) 0 0;\n}\n.policy-form[data-v-b7879991] {\n    padding: 16px;\n}\n.form-row[data-v-b7879991] {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));\n    gap: 1rem;\n    margin-bottom: 1rem;\n}\n.form-group[data-v-b7879991] {\n    display: flex;\n    flex-direction: column;\n}\n.form-group label[data-v-b7879991] {\n    font-weight: 600;\n    margin-bottom: 4px;\n    color: var(--color-text-lighter, #555);\n    font-size: 0.9rem;\n}\n.form-group input[data-v-b7879991],\n.form-group select[data-v-b7879991] {\n    padding: 8px;\n    border: 1px solid var(--color-border-dark, #ddd);\n    border-radius: var(--border-radius, 4px);\n    font-size: 1rem;\n}\n.form-group input[data-v-b7879991]:focus,\n.form-group select[data-v-b7879991]:focus {\n    outline: none;\n    border-color: var(--color-primary-element, #0082c9);\n}\nbutton.primary[data-v-b7879991],\nbutton.secondary[data-v-b7879991] {\n    padding: 10px 20px;\n    border: none;\n    border-radius: var(--border-radius, 4px);\n    font-size: 1rem;\n    cursor: pointer;\n    transition: background-color 0.2s;\n    margin-top: 1rem;\n}\nbutton.primary[data-v-b7879991] {\n    background: var(--color-primary-element, #0082c9);\n    color: white;\n}\nbutton.primary[data-v-b7879991]:hover:not(:disabled) {\n    background: var(--color-primary-element-hover, #006aa3);\n}\nbutton.primary[data-v-b7879991]:disabled {\n    opacity: 0.5;\n    cursor: not-allowed;\n}\nbutton.secondary[data-v-b7879991] {\n    background: var(--color-background-hover, #f5f5f5);\n    color: var(--color-main-text, #333);\n    border: 1px solid var(--color-border, #ddd);\n}\nbutton.secondary[data-v-b7879991]:hover {\n    background: var(--color-background-dark, #e8e8e8);\n}\n.error-message[data-v-b7879991] {\n    color: var(--color-error, #d32f2f);\n    margin-top: 1rem;\n    padding: 12px;\n    background: var(--color-error-background, #ffebee);\n    border-radius: var(--border-radius, 4px);\n}\n.success-message[data-v-b7879991] {\n    color: var(--color-success, #388e3c);\n    margin-top: 1rem;\n    padding: 12px;\n    background: var(--color-success-background, #e8f5e9);\n    border-radius: var(--border-radius, 4px);\n}\n.loading-message[data-v-b7879991],\n.placeholder-message[data-v-b7879991] {\n    color: var(--color-text-lighter, #666);\n    font-style: italic;\n    padding: 1rem;\n}\n.subsection h4[data-v-b7879991] {\n    margin: 1.5rem 0 1rem 0;\n    color: var(--color-main-text, #555);\n}\n.policies-list[data-v-b7879991] {\n    display: grid;\n    gap: 1rem;\n}\n.policy-card[data-v-b7879991] {\n    border: 1px solid var(--color-border, #e0e0e0);\n    border-radius: var(--border-radius, 4px);\n    padding: 1rem;\n    background: var(--color-background-hover, #fafafa);\n}\n.policy-header[data-v-b7879991] {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    margin-bottom: 0.5rem;\n}\n.policy-header h5[data-v-b7879991] {\n    margin: 0;\n    color: var(--color-main-text, #333);\n}\n.policy-badge[data-v-b7879991] {\n    background: var(--color-primary-element, #0082c9);\n    color: white;\n    padding: 4px 12px;\n    border-radius: 12px;\n    font-size: 0.875rem;\n}\n.policy-details[data-v-b7879991] {\n    color: var(--color-text-lighter, #555);\n    margin-bottom: 1rem;\n}\n.policy-actions[data-v-b7879991] {\n    display: flex;\n    gap: 0.5rem;\n}\n\n.manager-assignment[data-v-bb3ffbc7] {\n    margin-top: 1rem;\n}\n.info-box[data-v-bb3ffbc7] {\n    background: var(--color-background-hover);\n    border: 1px solid var(--color-border);\n    border-left: 3px solid var(--color-success);\n    border-radius: var(--border-radius);\n    padding: 1.5rem;\n    margin-bottom: 2rem;\n}\n.info-box p[data-v-bb3ffbc7] {\n    margin: 0.5rem 0;\n    color: var(--color-main-text);\n}\n.info-box ol[data-v-bb3ffbc7] {\n    margin: 0.5rem 0 0.5rem 1.5rem;\n    color: var(--color-main-text);\n}\n.manager-summary h4[data-v-bb3ffbc7] {\n    color: var(--color-main-text, #555);\n    margin-bottom: 1rem;\n}\n.loading-message[data-v-bb3ffbc7],\n.placeholder-message[data-v-bb3ffbc7] {\n    color: var(--color-text-lighter, #666);\n    font-style: italic;\n    padding: 1rem;\n}\n.users-table[data-v-bb3ffbc7] {\n    border: 1px solid var(--color-border, #e0e0e0);\n    border-radius: var(--border-radius, 4px);\n    overflow: hidden;\n}\n.table-header[data-v-bb3ffbc7] {\n    display: grid;\n    grid-template-columns: 2fr 3fr 1fr;\n    gap: 1rem;\n    padding: 12px 16px;\n    background: var(--color-background-dark, #f8f8f8);\n    font-weight: 600;\n    border-bottom: 1px solid var(--color-border, #e0e0e0);\n}\n.user-row[data-v-bb3ffbc7] {\n    display: grid;\n    grid-template-columns: 2fr 3fr 1fr;\n    gap: 1rem;\n    padding: 12px 16px;\n    border-bottom: 1px solid var(--color-border, #e0e0e0);\n    align-items: center;\n}\n.user-row[data-v-bb3ffbc7]:last-child {\n    border-bottom: none;\n}\n.user-row[data-v-bb3ffbc7]:hover {\n    background: var(--color-background-hover, #fafafa);\n}\n.col-user[data-v-bb3ffbc7] {\n    display: flex;\n    flex-direction: column;\n}\n.user-id[data-v-bb3ffbc7] {\n    color: var(--color-text-lighter, #666);\n    font-size: 0.875rem;\n}\n.col-managers[data-v-bb3ffbc7] {\n    color: var(--color-main-text, #333);\n}\n.no-managers[data-v-bb3ffbc7] {\n    color: var(--color-text-lighter, #999);\n    font-style: italic;\n}\n.col-can-approve[data-v-bb3ffbc7] {\n    display: flex;\n    gap: 0.5rem;\n    justify-content: flex-end;\n}\n.badge[data-v-bb3ffbc7] {\n    padding: 4px 12px;\n    border-radius: 12px;\n    font-size: 0.75rem;\n    font-weight: 600;\n}\n.badge.manager[data-v-bb3ffbc7] {\n    background: var(--color-primary-element, #0082c9);\n    color: white;\n}\n.no-action[data-v-bb3ffbc7] {\n    color: var(--color-text-lighter, #999);\n}\n.error-message[data-v-bb3ffbc7] {\n    color: var(--color-error, #d32f2f);\n    margin-top: 1rem;\n    padding: 12px;\n    background: var(--color-error-background, #ffebee);\n    border-radius: var(--border-radius, 4px);\n}\n\n.calendar-settings[data-v-5987f3e4] {\n    max-width: 600px;\n}\n.form-group[data-v-5987f3e4] {\n    margin-bottom: 1.5rem;\n}\n.form-group label[data-v-5987f3e4] {\n    display: block;\n    font-weight: 500;\n    margin-bottom: 0.5rem;\n    color: var(--color-main-text);\n}\n.form-group select[data-v-5987f3e4] {\n    width: 100%;\n    padding: 0.75rem;\n    border: 1px solid var(--color-border-dark);\n    border-radius: var(--border-radius);\n    font-size: 1rem;\n    font-family: inherit;\n    min-height: 44px;\n    background-color: var(--color-main-background);\n    color: var(--color-main-text);\n}\n.settings-hint[data-v-5987f3e4] {\n    color: var(--color-text-lighter);\n    font-size: 0.875rem;\n    margin-top: 0.5rem;\n    line-height: 1.4;\n}\n.loading[data-v-5987f3e4] {\n    color: var(--color-text-lighter);\n    padding: 1rem 0;\n}\n.success-message[data-v-5987f3e4] {\n    background: var(--color-success);\n    color: var(--color-primary-element-text);\n    padding: 0.75rem 1rem;\n    border-radius: var(--border-radius);\n    margin-top: 1rem;\n    opacity: 0.9;\n}\n.error-message[data-v-5987f3e4] {\n    background: var(--color-error);\n    color: var(--color-primary-element-text);\n    padding: 0.75rem 1rem;\n    border-radius: var(--border-radius);\n    margin-top: 1rem;\n    opacity: 0.9;\n}\n\n.policy-assignment[data-v-5636b11f] {\n    margin-top: 2rem;\n    padding: 1.5rem;\n    background: var(--color-main-background);\n    border: 1px solid var(--color-border);\n    border-radius: var(--border-radius);\n}\n.section-desc[data-v-5636b11f] {\n    color: var(--color-text-lighter);\n    margin-bottom: 1rem;\n}\n.form-group[data-v-5636b11f] {\n    margin-bottom: 1.5rem;\n}\n.form-group label[data-v-5636b11f] {\n    display: block;\n    margin-bottom: 0.5rem;\n    font-weight: bold;\n}\n.form-group select[data-v-5636b11f] {\n    width: 100%;\n    max-width: 400px;\n    padding: 0.5rem;\n    border: 1px solid var(--color-border);\n    border-radius: var(--border-radius);\n    background: var(--color-main-background);\n    color: var(--color-main-text);\n}\n.policy-list[data-v-5636b11f] {\n    margin-top: 2rem;\n}\n.policy-items[data-v-5636b11f] {\n    margin-top: 1rem;\n}\n.policy-item[data-v-5636b11f] {\n    display: flex;\n    align-items: center;\n    justify-content: space-between;\n    padding: 1rem;\n    margin-bottom: 0.5rem;\n    background: var(--color-background-dark);\n    border-radius: var(--border-radius);\n}\n.policy-checkbox[data-v-5636b11f] {\n    flex: 1;\n}\n.policy-checkbox input[type="checkbox"][data-v-5636b11f] {\n    margin-right: 0.5rem;\n}\n.policy-checkbox label[data-v-5636b11f] {\n    cursor: pointer;\n}\n.policy-type[data-v-5636b11f] {\n    margin-left: 0.5rem;\n    color: var(--color-text-lighter);\n    font-size: 0.9em;\n}\n.policy-balance[data-v-5636b11f] {\n    display: flex;\n    align-items: center;\n    gap: 0.5rem;\n}\n.policy-balance label[data-v-5636b11f] {\n    font-size: 0.9em;\n    color: var(--color-text-lighter);\n}\n.policy-balance input[data-v-5636b11f] {\n    width: 80px;\n    padding: 0.25rem 0.5rem;\n    border: 1px solid var(--color-border);\n    border-radius: var(--border-radius);\n    background: var(--color-main-background);\n    color: var(--color-main-text);\n}\n.balance-label[data-v-5636b11f] {\n    font-size: 0.9em;\n    color: var(--color-text-lighter);\n}\n.actions[data-v-5636b11f] {\n    margin-top: 1.5rem;\n    display: flex;\n    gap: 0.5rem;\n}\n.actions button[data-v-5636b11f] {\n    padding: 0.5rem 1rem;\n    border: none;\n    border-radius: var(--border-radius);\n    cursor: pointer;\n    font-weight: bold;\n}\n.actions button.primary[data-v-5636b11f] {\n    background: var(--color-primary-element);\n    color: var(--color-primary-element-text);\n}\n.actions button[data-v-5636b11f]:not(.primary) {\n    background: var(--color-background-dark);\n    color: var(--color-main-text);\n}\n.actions button[data-v-5636b11f]:disabled {\n    opacity: 0.5;\n    cursor: not-allowed;\n}\n.loading-message[data-v-5636b11f],\n.info-message[data-v-5636b11f] {\n    color: var(--color-text-lighter);\n    font-style: italic;\n    padding: 1rem;\n}\n.success-message[data-v-5636b11f] {\n    background: var(--color-success);\n    color: var(--color-primary-element-text);\n    padding: 0.75rem 1rem;\n    border-radius: var(--border-radius);\n    margin-top: 1rem;\n}\n.error-message[data-v-5636b11f] {\n    background: var(--color-error);\n    color: var(--color-primary-element-text);\n    padding: 0.75rem 1rem;\n    border-radius: var(--border-radius);\n    margin-top: 1rem;\n}\n/*$vite$:1*/';
   document.head.appendChild(__vite_style__);
   /**
-  * @vue/shared v3.5.30
+  * @vue/shared v3.5.31
   * (c) 2018-present Yuxi (Evan) You and Vue contributors
   * @license MIT
   **/
@@ -244,7 +244,7 @@
     );
   };
   /**
-  * @vue/reactivity v3.5.30
+  * @vue/reactivity v3.5.31
   * (c) 2018-present Yuxi (Evan) You and Vue contributors
   * @license MIT
   **/
@@ -1753,7 +1753,7 @@
     return value;
   }
   /**
-  * @vue/runtime-core v3.5.30
+  * @vue/runtime-core v3.5.31
   * (c) 2018-present Yuxi (Evan) You and Vue contributors
   * @license MIT
   **/
@@ -3415,11 +3415,12 @@
     }
     return nextProp !== prevProp;
   }
-  function updateHOCHostEl({ vnode, parent }, el) {
+  function updateHOCHostEl({ vnode, parent, suspense }, el) {
     while (parent) {
       const root = parent.subTree;
       if (root.suspense && root.suspense.activeBranch === vnode) {
-        root.el = vnode.el;
+        root.suspense.vnode.el = root.el = el;
+        vnode = root;
       }
       if (root === vnode) {
         (vnode = parent.vnode).el = el;
@@ -3427,6 +3428,9 @@
       } else {
         break;
       }
+    }
+    if (suspense && suspense.activeBranch === vnode) {
+      suspense.vnode.el = el;
     }
   }
   const internalObjectProto = {};
@@ -4059,9 +4063,12 @@
       hostInsert(el, container, anchor);
       if ((vnodeHook = props && props.onVnodeMounted) || needCallTransitionHooks || dirs) {
         queuePostRenderEffect(() => {
-          vnodeHook && invokeVNodeHook(vnodeHook, parentComponent, vnode);
-          needCallTransitionHooks && transition.enter(el);
-          dirs && invokeDirectiveHook(vnode, null, parentComponent, "mounted");
+          try {
+            vnodeHook && invokeVNodeHook(vnodeHook, parentComponent, vnode);
+            needCallTransitionHooks && transition.enter(el);
+            dirs && invokeDirectiveHook(vnode, null, parentComponent, "mounted");
+          } finally {
+          }
         }, parentSuspense);
       }
     };
@@ -4868,7 +4875,8 @@
         shapeFlag,
         patchFlag,
         dirs,
-        cacheIndex
+        cacheIndex,
+        memo
       } = vnode;
       if (patchFlag === -2) {
         optimized = false;
@@ -4930,10 +4938,14 @@
           remove2(vnode);
         }
       }
-      if (shouldInvokeVnodeHook && (vnodeHook = props && props.onVnodeUnmounted) || shouldInvokeDirs) {
+      const shouldInvalidateMemo = memo != null && cacheIndex == null;
+      if (shouldInvokeVnodeHook && (vnodeHook = props && props.onVnodeUnmounted) || shouldInvokeDirs || shouldInvalidateMemo) {
         queuePostRenderEffect(() => {
           vnodeHook && invokeVNodeHook(vnodeHook, parentComponent, vnode);
           shouldInvokeDirs && invokeDirectiveHook(vnode, null, parentComponent, "unmounted");
+          if (shouldInvalidateMemo) {
+            vnode.el = null;
+          }
         }, parentSuspense);
       }
     };
@@ -5501,6 +5513,10 @@
           const incoming = toMerge[key];
           if (incoming && existing !== incoming && !(isArray(existing) && existing.includes(incoming))) {
             ret[key] = existing ? [].concat(existing, incoming) : incoming;
+          } else if (incoming == null && existing == null && // mergeProps({ 'onUpdate:modelValue': undefined }) should not retain
+          // the model listener.
+          !isModelListener(key)) {
+            ret[key] = incoming;
           }
         } else if (key !== "") {
           ret[key] = toMerge[key];
@@ -5798,9 +5814,9 @@
     const c = /* @__PURE__ */ computed$1(getterOrOptions, debugOptions, isInSSRComponentSetup);
     return c;
   };
-  const version = "3.5.30";
+  const version = "3.5.31";
   /**
-  * @vue/runtime-dom v3.5.30
+  * @vue/runtime-dom v3.5.31
   * (c) 2018-present Yuxi (Evan) You and Vue contributors
   * @license MIT
   **/
@@ -6260,7 +6276,8 @@
       if (elValue === newValue) {
         return;
       }
-      if (document.activeElement === el && el.type !== "range") {
+      const rootNode = el.getRootNode();
+      if ((rootNode instanceof Document || rootNode instanceof ShadowRoot) && rootNode.activeElement === el && el.type !== "range") {
         if (lazy && value === oldValue) {
           return;
         }
@@ -7011,7 +7028,8 @@
         this.pendingRemoval = [];
         this.balanceUpdates = {};
         try {
-          this.userBalances = await apiGet(`balances?userId=${this.selectedUserId}`);
+          const response = await apiGet(`balances?userId=${this.selectedUserId}`);
+          this.userBalances = Array.isArray(response) ? response : response && Array.isArray(response.balances) ? response.balances : [];
         } catch (error) {
           this.errorMessage = "Failed to load user balances";
           this.userBalances = [];
@@ -7242,7 +7260,7 @@
       ])) : createCommentVNode("", true)
     ]);
   }
-  const PolicyAssignment = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-2b3deaaa"]]);
+  const PolicyAssignment = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-5636b11f"]]);
   const policyEl = document.getElementById("pto-policy-management");
   if (policyEl) {
     const policyApp = createApp(PolicyManagement);
