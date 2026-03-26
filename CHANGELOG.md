@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.1.0 - 2026-03-26
+
+### Release Notes
+**Nextcloud 32 compatibility release** - Now supports both NC32 and NC33!
+
+### Added
+- Nextcloud 32 support (min-version: 32, max-version: 33)
+- Better error messages for request validation failures
+- Graceful handling of permission checks for non-admin users
+
+### Fixed
+- PolicyAssignment component now handles different API response formats between NC32/NC33
+- Request submission now shows specific error messages (e.g. "Insufficient PTO balance") instead of generic "Bad request"
+- Removed console 403 errors when non-admin users load the app
+
+### Changed
+- Defensive coding for API responses to ensure compatibility across NC versions
+
 ## 1.0.0 - 2026-03-24
 
 ### Release Notes
